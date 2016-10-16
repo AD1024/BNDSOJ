@@ -79,7 +79,7 @@ EOD;
   		}
 		else
   		{
-			if($_FILES["problem_data_file"]["type"]=='application/zip'){
+			//if($_FILES["problem_data_file"]["type"]=='application/zip'){
 				$up_filename="/tmp/".rand(0,100000000)."data.zip";
 				move_uploaded_file($_FILES["problem_data_file"]["tmp_name"], $up_filename);
 				$zip = new ZipArchive;
@@ -92,10 +92,11 @@ EOD;
 					$errmsg = "解压失败！";
 					becomeMsgPage('<div>' . $errmsg . '</div><a href="/problem/'.$problem['id'].'/manage/data">返回</a>');
 				}
-			}else{
-				$errmsg = "请上传zip文件！";
-				becomeMsgPage('<div>' . $errmsg . '</div><a href="/problem/'.$problem['id'].'/manage/data">返回</a>');
-			}
+				unlink($up_filename);
+			//}else{
+				//$errmsg = "请上传zip文件！";
+				//becomeMsgPage('<div>' . $errmsg . '</div><a href="/problem/'.$problem['id'].'/manage/data">返回</a>');
+			//}
   		}
 	}
 
