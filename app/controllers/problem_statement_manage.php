@@ -52,6 +52,12 @@
 	<li class="active"><a href="/problem/<?= $problem['id'] ?>/manage/statement" role="tab">编辑</a></li>
 	<li><a href="/problem/<?= $problem['id'] ?>/manage/managers" role="tab">管理者</a></li>
 	<li><a href="/problem/<?= $problem['id'] ?>/manage/data" role="tab">数据</a></li>
+	<? //dhxh begin ?>
+	<li><a href="/problem/<?= $problem['id'] ?>/manage/imgupload" role="tab">图片上传</a></li>
+	<? //dhxh end ?>
+	<?// AD1024 Modify on 2016.10.20 ?>
+	<li><a href="/problem/<?= $problem['id']?>/manage/imgmanage" role="tab">图片管理</a></li>
+	<?// AD1024 Modify on 2016.10.20 ?>
 	<li><a href="/problem/<?=$problem['id']?>" role="tab">返回</a></li>
 </ul>
 <?php $problem_editor->printHTML() ?>

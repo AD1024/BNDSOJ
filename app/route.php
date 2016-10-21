@@ -18,6 +18,10 @@ Route::group([
 		Route::any('/problem/{id}/manage/statement', '/problem_statement_manage.php');
 		Route::any('/problem/{id}/manage/managers', '/problem_managers_manage.php');
 		Route::any('/problem/{id}/manage/data', '/problem_data_manage.php');
+
+		//dhxh begin
+		Route::any('/problem/{id}/manage/imgupload', '/problem_img_upload.php');
+		//dhxh end
 		
 		Route::any('/contests', '/contests.php');
 		Route::any('/contest/new', '/add_contest.php');
@@ -41,6 +45,7 @@ Route::group([
 		Route::any('/blog/{id}', '/blog_show.php');
 		
 		Route::any('/announcements', '/announcements.php');
+		Route::any('/problem/{id}/manage/imgmanage','/problem_img_manage.php');
 		
 		Route::any('/faq', '/faq.php');
 		Route::any('/ranklist', '/ranklist.php?type=rating');
