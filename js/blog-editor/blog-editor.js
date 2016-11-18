@@ -21,13 +21,21 @@ function blog_editor_init(name, editor_config) {
 	var preview_btn = $('<button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-eye-open"></span></button>');
 	var bold_btn = $('<button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-bold"></span></button>');
 	var italic_btn = $('<button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-italic"></span></button>');
+	//dhxh begin
+	var addimg_btn = $('<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#UploadImgModal"><span class="glyphicon glyphicon-picture"></span></button>');
+	//dhxh end
 	
 	save_btn.tooltip({ container: 'body', title: '保存 (Ctrl-S)' });
 	preview_btn.tooltip({ container: 'body', title: '预览 (Ctrl-D)' 	});
 	bold_btn.tooltip({ container: 'body', title: '粗体 (Ctrl-B)' });
 	italic_btn.tooltip({ container: 'body', title: '斜体 (Ctrl-I)' });
+	//dhxh begin
+	addimg_btn.tooltip({ container: 'body', title: '图片' });
 	
-	var all_btn = [save_btn, preview_btn, bold_btn, italic_btn];
+	
+	//var all_btn = [save_btn, preview_btn, bold_btn, italic_btn];
+	var all_btn = [save_btn, preview_btn, bold_btn, italic_btn, addimg_btn];
+	//dhxh end
 	
 	// init toolbar
 	var toolbar = $('<div class="btn-toolbar"></div>');
@@ -38,6 +46,7 @@ function blog_editor_init(name, editor_config) {
 	toolbar.append($('<div class="btn-group"></div>')
 		.append(bold_btn)
 		.append(italic_btn)
+		.append(addimg_btn) //add by dhxh
 	);
 	
 	function set_saved(val) {
@@ -249,6 +258,11 @@ function blog_editor_init(name, editor_config) {
 		add_around("*", "*");
 		codeeditor.focus();
 	});
+
+	//dhxh begin
+	window.codee=codeeditor;
+	//dhxh end
+
 	input_is_hidden.on('switchChange.bootstrapSwitch', function(e, state) {
 		var ok = true;
 		if (!state && !confirm("你确定要公开吗？")) {

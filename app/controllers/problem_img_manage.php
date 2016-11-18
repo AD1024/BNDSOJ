@@ -1,21 +1,24 @@
 <?php
 /*
 * Created by AD1024
+* Modified by dhxh
 * */
-		requirePHPLib('form');
-		if (!validateUInt($_GET['id']) || !($problem = queryProblemBrief($_GET['id']))) {
-			become404Page();
-		}
-		if (!hasProblemPermission($myUser, $problem)) {
-			become403Page();
-		}
-		if(isset($_POST["Removal"])){
+	requirePHPLib('form');
+	if (!validateUInt($_GET['id']) || !($problem = queryProblemBrief($_GET['id']))) {
+		become404Page();
+	}
+	if (!hasProblemPermission($myUser, $problem)) {
+		become403Page();
+	}
+	if(isset($_POST["Removal"])){
 		$filedir="/var/www/uoj/imgupload/";
 		foreach ($_REQUEST['rm'] as $del) {
 			// Delete certain file
+			//过滤危险字符
+			$del=preg_replace("#/#", "", $del);
 			unlink($filedir.$del);
-			echo $filedir.$del;
 		}
+		echo '<script>alert("删除成功！")</script>';
 	}
 
 ?>
@@ -26,7 +29,7 @@
 	<li><a href="/problem/<?= $problem['id'] ?>/manage/statement" role="tab">编辑</a></li>
 	<li><a href="/problem/<?= $problem['id'] ?>/manage/managers" role="tab">管理者</a></li>
 	<li><a href="/problem/<?= $problem['id'] ?>/manage/data" role="tab">数据</a></li>
-	<li><a href="/problem/<?= $problem['id'] ?>/manage/imgupload" role="tab">图片上传</a></li>
+	<!--<li><a href="/problem/<?= $problem['id'] ?>/manage/imgupload" role="tab">图片上传</a></li>-->
 	<li class="active"><a href="/problem/<?= $problem['id']?>/manage/imgmanage" role="tab">图片管理</a></li>
 	<li><a href="/problem/<?=$problem['id']?>" role="tab">返回</a></li>
 </ul>
@@ -47,7 +50,8 @@
     							<div class="thumbnail">
       								<img  data-src="holder.js/300x300" src="/imgupload/<?php echo $image; ?>">
       								<div class="caption">
-        								<input type="checkbox" name="rm[]" value='.'"'.$image.'"'.'>选择
+      									<p>图片地址：<?php echo "/imgupload/".$image; ?></p>
+        								<input type="checkbox" name="rm[]" value="<?php echo $image; ?>">选择
       								</div>
     							</div>
   							</div>
