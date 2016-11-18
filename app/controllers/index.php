@@ -5,7 +5,7 @@
 <div class="panel panel-default">
 	<div class="panel-body">
 		<div class="row">
-			<div class="col-sm-12 col-md-9">
+			<div class="col-sm-12 col-md-12">
 				<table class="table">
 					<thead>
 						<tr>
@@ -37,9 +37,9 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="col-xs-6 col-sm-4 col-md-3">
+			<!--<div class="col-xs-6 col-sm-4 col-md-3">
 				<img class="media-object img-thumbnail" src="/pictures/UOJ.png" alt="UOJ logo" />
-			</div>
+			</div>-->
 		</div>
 	</div>
 </div>
