@@ -1,4 +1,6 @@
 <?php
+	//become404page();
+	//exit();
 	function handleRegisterPost() {
 		if (!crsf_check()) {
 			return '页面已过期';
