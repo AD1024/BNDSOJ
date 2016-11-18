@@ -9,6 +9,14 @@
 			mysql_query("insert into problems (title, is_hidden, submission_requirement) values ('New Problem', 1, '{}')");
 			$id = mysql_insert_id();
 			mysql_query("insert into problems_contents (id, statement, statement_md) values ($id, '', '')");
+
+			// AD1024 Start
+			mysql_query("update problems set hackable = 0 where id = {$id}");
+			$__config = array('view_details_type'=>'ALL_AFTER_AC','view_all_details_type'=>'ALL','view_content_type'=>'ALL_AFTER_AC');
+			$__esc_conf = DB::escape(json_encode($__config));
+			mysql_query("update problems set extra_config = '$__esc_conf' where id = {$id}");
+			// AD1024 End
+
 			svnNewProblem($id);
 		};
 		$new_problem_form->submit_button_config['align'] = 'right';
@@ -63,9 +71,14 @@ EOD;
 	}
 	if (isset($_GET['tag'])) {
 		$search_tag = $_GET['tag'];
+		//dhxh begin
+		$search_tag = str_replace("'","",$search_tag);
+		$search_tag = str_replace("\\","",$search_tag);
+		$search_tag = str_replace("%27","",$search_tag);
+		//dhxh end
 	}
 	if ($search_tag) {
-		$cond[] = "'".$search_tag."' in (select tag from problems_tags where problems_tags.problem_id = problems.id)";
+		$cond[] = "'".DB::escape($search_tag)."' in (select tag from problems_tags where problems_tags.problem_id = problems.id)";
 	}
 	
 	if ($cond) {
