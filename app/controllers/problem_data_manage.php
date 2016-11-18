@@ -108,6 +108,11 @@ EOD;
 					mkdir("/var/svn/problem/{$problem['id']}/cur/{$problem['id']}/1/");
 				}
 				$set_filename="/var/svn/problem/{$problem['id']}/cur/{$problem['id']}/1/problem.conf";
+				$has_legacy=false;
+				if(file_exists($set_filename)){
+					$has_legacy=true;
+					unlink($set_filename);
+				}
 				$setfile = fopen($set_filename, "w");
 				fwrite($setfile, "use_builtin_judger on\n");
 				fwrite($setfile, "use_builtin_checker ".$_POST['use_builtin_checker']."\n");
@@ -129,7 +134,11 @@ EOD;
 				fwrite($setfile, "time_limit ".$_POST['time_limit']."\n");
 				fwrite($setfile, "memory_limit ".$_POST['memory_limit']."\n");
 				fclose($setfile);
-				echo "<script>alert('添加成功！')</script>";
+				if(!$has_legacy){
+					echo "<script>alert('添加成功！')</script>";
+				}else{
+					echo "<script>alert('替换成功!')</script>";
+				}
 
 		}else{
 			$errmsg = "添加配置文件失败，请检查是否所有输入框都已填写！";
@@ -504,6 +513,7 @@ EOD
 	$hackable_form->handle = function() {
 		global $problem;
 		$problem['hackable'] = !$problem['hackable'];
+		//$problem['hackable'] = 0;
 		$ret = svnSyncProblemData($problem);
 		if ($ret) {
 			becomeMsgPage('<div>' . $ret . '</div><a href="/problem/'.$problem['id'].'/manage/data">返回</a>');
@@ -774,9 +784,9 @@ EOD
     							<label for="use_builtin_checker" class="col-sm-5 control-label">比对函数</label>
     							<div class="col-sm-7">
 								<select class="form-control" id="use_builtin_checker" name="use_builtin_checker">
-  									<option value="ncmp">数字</option>
-  									<option value="wcmp">字符</option>
-  									<option value="fcmp">多行</option>
+  									<option value="ncmp">单行整数序列</option>
+  									<option value="wcmp">单行字符串序列</option>
+  									<option value="fcmp">多行数据(忽略行末空格以及最后一行空行)</option>
 								</select>
       								<!--<input type="hidden" class="form-control" id="use_builtin_checker" name="use_builtin_checker" placeholder="比对函数">-->
     							</div>
