@@ -246,7 +246,7 @@
 					<li role="presentation"><a href="<?= HTML::url('/register') ?>"><?= UOJLocale::get('register') ?></a></li>
 				<?php endif ?>
 				</ul>
-				<h1 class="hidden-xs"><a href="<?= HTML::url('/') ?>"><img src="<?= HTML::url('/pictures/UOJ_small.png') ?>" alt="UOJ Logo" class="img-rounded" style="width:39px; height:39px;" /></a> <?= $PageMainTitle ?></h1>
+				<h1 class="hidden-xs"><a href="<?= HTML::url('/') ?>"><img src="<?= HTML::url('/pictures/BNDSOJ-small.png') ?>" alt="UOJ Logo" class="img-rounded" style="width:39px; height:39px;" /></a> <?= $PageMainTitle ?></h1>
 				<h1 class="visible-xs"><?= $PageMainTitleOnSmall ?></h1>
 			</div>
 			

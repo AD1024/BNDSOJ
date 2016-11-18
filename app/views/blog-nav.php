@@ -13,7 +13,7 @@
 			<ul class="nav navbar-nav">
 				<li><a href="/archive">日志</a></li>
 				<li><a href="/aboutme">关于我</a></li>
-				<li><a href="<?= HTML::url('/') ?>">UOJ</a></li>
+				<li><a href="<?= HTML::url('/') ?>">BNDSOJ</a></li>
 			</ul>
 		</div><!--/.nav-collapse -->
 	</div>

@@ -147,13 +147,79 @@ function echoLongTable($col_names, $table_name, $cond, $tail, $header_row, $prin
 	echo '</thead>';
 	echo '<tbody>';
 
-	foreach ($pag->get() as $idx => $row) {
-		if (isset($config['get_row_index'])) {
-			$print_row($row, $idx);
-		} else {
-			$print_row($row);
+	//dhxh begin
+
+	
+
+	if($config['is_rank_list']){
+		$print_row_unrated = function($user, $now_cnt) use(&$users) {
+			if (!$users) {
+				$rank = DB::selectCount("select count(*) from user_info where rating > {$user['rating']}") + 1;
+			} else if ($user['rating'] == $users[count($users) - 1]['rating']) {
+				$rank = $users[count($users) - 1]['rank'];
+			} else {
+				$rank = $now_cnt;
+			}
+			$isb = DB::selectCount("select count(*) from contests_registrants where username = '{$user['username']}' and has_participated = 1");
+			
+			if($isb == 0){
+				$rank = DB::selectCount("select count(distinct username) from contests_registrants where has_participated = 1") + 1;
+				$user['rank'] = $rank;
+			
+				echo '<tr>';
+				echo '<td>' . $user['rank'] . '</td>';
+				echo '<td>' . getUserLink($user['username']) . '</td>';
+				echo '<td>' . HTML::escape($user['motto']) . '</td>';
+				echo '<td>Unrated</td>';
+				echo '</tr>';
+			}else{
+				return 0;
+			}
+			return 1;
+		};
+
+		if(isset($config['top10'])){
+			$cnt_top_ten = 0;
+			foreach ($pag->get() as $idx => $row) {
+				if($cnt_top_ten >= 10){
+					break;
+				}
+				if (isset($config['get_row_index'])) {
+					$cnt_top_ten = $cnt_top_ten + $print_row($row, $idx);
+				} else {
+					$cnt_top_ten = $cnt_top_ten + $print_row($row);
+				}
+
+			}
+		}else{
+			foreach ($pag->get() as $idx => $row) {
+				if (isset($config['get_row_index'])) {
+					$print_row($row, $idx);
+				} else {
+					$print_row($row);
+				}
+			}
+
+			foreach ($pag->get() as $idx => $row) {
+				if (isset($config['get_row_index'])) {
+					$print_row_unrated($row, $idx);
+				} else {
+					$print_row_unrated($row);
+				}
+			}
+		}
+	}else{
+		foreach ($pag->get() as $idx => $row) {
+			if (isset($config['get_row_index'])) {
+				$print_row($row, $idx);
+			} else {
+				$print_row($row);
+			}
 		}
 	}
+
+	//dhxh end
+
 	if ($pag->isEmpty()) {
 		echo '<tr><td colspan="233">'.UOJLocale::get('none').'</td></tr>';
 	}
@@ -934,8 +1000,33 @@ function echoRanklist($config = array()) {
 		} else {
 			$rank = $now_cnt;
 		}
+
+		//dhxh begin
+		$isb = DB::selectCount("select count(*) from contests_registrants where username = '{$user['username']}' and has_participated = 1");
 		
-		$user['rank'] = $rank;
+		if($isb != 0){
+			$user['rank'] = $rank;
+
+			if($user['rating'] < 1500){
+				$cnt_not_participated = DB::selectCount("select count(distinct username) from contests_registrants where has_participated = 1");
+				$cnt_not_participated = DB::selectCount("select count(*) from user_info") - $cnt_not_participated;
+				$user['rank'] = $rank - $cnt_not_participated;
+			}
+		
+			echo '<tr>';
+			echo '<td>' . $user['rank'] . '</td>';
+			echo '<td>' . getUserLink($user['username']) . '</td>';
+			echo '<td>' . HTML::escape($user['motto']) . '</td>';
+			echo '<td>' . $user['rating'] . '</td>';
+			echo '</tr>';
+		}else{
+			return 0;
+		}
+
+		return 1;
+		//dhxh end
+		
+		/*$user['rank'] = $rank;
 		
 		echo '<tr>';
 		echo '<td>' . $user['rank'] . '</td>';
@@ -944,14 +1035,15 @@ function echoRanklist($config = array()) {
 		echo '<td>' . $user['rating'] . '</td>';
 		echo '</tr>';
 		
-		$users[] = $user;
+		$users[] = $user;*/
 	};
 	$col_names = array('username', 'rating', 'motto');
 	$tail = 'order by rating desc, username asc';
 	
-	if (isset($config['top10'])) {
+	/*if (isset($config['top10'])) {
 		$tail .= ' limit 10';
-	}
+	}*/
+	$config['is_rank_list'] = '1';
 	
 	$config['get_row_index'] = '';
 	echoLongTable($col_names, 'user_info', '1', $tail, $header_row, $print_row, $config);

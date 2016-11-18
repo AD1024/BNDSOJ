@@ -17,7 +17,7 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title><?= isset($PageTitle) ? $PageTitle : 'UOJ' ?> - <?= isset($PageMainTitle) ? $PageMainTitle : 'Universal Online Judge' ?></title>
+		<title><?= isset($PageTitle) ? 'BNDSOJ' : 'BNDSOJ' ?> - <?= isset($PageMainTitle) ? 'BNDS Online Judge' : 'BNDS Online Judge' ?></title>
 
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
