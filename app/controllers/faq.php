@@ -5,9 +5,9 @@
 	</header>
 	<section>
 		<header>
-			<h4>1. 什么是UOJ</h4>
+			<h4>1. 什么是BNDSOJ</h4>
 		</header>
-		<p>见 <a href="http://uoj.ac/blog/4">http://uoj.ac/blog/4</a>。 </p>
+		<p>见 <a href="http://bnds.tech/blog/4">BNDSOJ介绍</a>。 </p>
 	</section>
 	<section>
 		<header>
@@ -18,9 +18,9 @@
 	</section>
 	<section>
 		<header>
-			<h4>3. UOJ的测评环境</h4>
+			<h4>3. BNDSOJ的测评环境</h4>
 		</header>
-		<p>测评环境是Linux，Ubuntu 14.04，64位系统。</p>
+		<p>测评环境是Linux，Ubuntu 16.04，64位系统。</p>
 		<p>C++的编译器是 g++ 4.8.4，编译命令：<code>g++ code.cpp -o code -lm -O2 -DONLINE_JUDGE</code>。如果选择C++11会在编译命令后面添加<code>-std=c++11</code>。</p>
 		<p>C的编译器是 gcc 4.8.4，编译命令：<code>gcc code.c -o code -lm -O2 -DONLINE_JUDGE</code>。</p>
 		<p>Pascal的编译器是 fpc 2.6.2，编译命令：<code>fpc code.pas -O2</code>。</p>
@@ -58,9 +58,9 @@
 		</header>
 		<p>如果你想出题、想办比赛，或者发现了BUG，或者对网站有什么建议，可以通过下面的方式联系我们：</p>
 		<ul>
-			<li>UOJ私信联系vfleaking。</li>
-			<li>邮件联系vfleaking@163.com。</li>
-			<li>你也可以进QQ群水水，群号是197293072，Universal OJ用户群。</li>
+			<li>BNDSOJ私信联系AD1024 or dhxh。</li>
+			<li>邮件联系ccoderad@gmail.com 或 yoyo991214@126.com。</li>
+			<!-- <li>你也可以进QQ群水水，群号是197293072，Universal OJ用户群。</li> -->
 		</ul>
 	</section>
 </article>

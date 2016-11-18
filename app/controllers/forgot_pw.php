@@ -25,7 +25,7 @@
 <base target="_blank" />
 
 <p>{$user['username']}您好，</p>
-<p>您刚刚启用了UOJ密码找回功能，请进入下面的链接重设您的密码：</p>
+<p>您刚刚启用了BNDSOJ密码找回功能，请进入下面的链接重设您的密码：</p>
 <p><a href="$url">$url</a></p>
 <p>Universal Online Judge</p>
 
@@ -37,7 +37,7 @@ EOD;
 		
 		$mailer = UOJMail::noreply();
 		$mailer->addAddress($user['email'], $user['username']);
-		$mailer->Subject = "UOJ密码找回";
+		$mailer->Subject = "BNDSOJ密码找回";
 		$mailer->msgHTML($html);
 		if (!$mailer->send()) {  
 			error_log($mailer->ErrorInfo);
