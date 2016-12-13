@@ -252,6 +252,10 @@ EOD;
 		'search' => array(
 			'name' => '搜索管理',
 			'url' => '/super-manage/search'
+		),
+		'user-group' => array(
+			'name' => '用户组管理',
+			'url' => '/super-manage/user-group'
 		)
 	);
 	
