@@ -2,12 +2,20 @@
 	requirePHPLib('form');
 	requirePHPLib('judger');
 	requirePHPLib('svn');
+
+	if ($myUser == null) {
+		redirectToLogin();
+	}
 	
 	if (isSuperUser($myUser)) {
 		$new_problem_form = new UOJForm('new_problem');
+		global $ran_id;
+		$ran_id = -1;
 		$new_problem_form->handle = function() {
 			mysql_query("insert into problems (title, is_hidden, submission_requirement) values ('New Problem', 1, '{}')");
 			$id = mysql_insert_id();
+			global $ran_id;
+			$ran_id = $id;
 			mysql_query("insert into problems_contents (id, statement, statement_md) values ($id, '', '')");
 
 			// AD1024 Start
@@ -18,6 +26,9 @@
 			// AD1024 End
 
 			svnNewProblem($id);
+			// AD1024 Begin
+			
+			// AD1024 End
 		};
 		$new_problem_form->submit_button_config['align'] = 'right';
 		$new_problem_form->submit_button_config['class_str'] = 'btn btn-primary';
@@ -106,6 +117,10 @@ EOD;
 		'template' => array(
 			'name' => UOJLocale::get('problems::template problems'),
 			'url' => "/problems/template"
+		),
+		'remoteoj' => array(
+			'name' => UOJLocale::get('problems::remote oj'),
+			'url' => "/remoteoj"
 		)
 	);
 	

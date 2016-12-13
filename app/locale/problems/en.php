@@ -3,6 +3,7 @@ return [
 	'problem' => 'Problem',
 	'all problems' => 'All Problems',
 	'template problems' => 'Template Problems',
+	'remote oj' => 'Remote OJ',
 	'add new' => 'Add new problem',
 	'title' => 'Title',
 	'ac' => 'AC',

@@ -5,6 +5,10 @@
 	if (!validateUInt($_GET['id']) || !($problem = queryProblemBrief($_GET['id']))) {
 		become404Page();
 	}
+
+	if ($myUser == null) {
+		redirectToLogin();
+	}
 	
 	$problem_content = queryProblemContent($problem['id']);
 	
