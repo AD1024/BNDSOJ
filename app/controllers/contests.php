@@ -1,5 +1,9 @@
 <?php
 	requirePHPLib('form');
+
+	if ($myUser == null) {
+		redirectToLogin();
+	}
 	
 	$upcoming_contest_name = null;
 	$upcoming_contest_href = null;

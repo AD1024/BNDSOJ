@@ -1,5 +1,9 @@
 <?php
 	requirePHPLib('form');
+
+	if ($myUser == null) {
+		redirectToLogin();
+	}
 	
 	if (!validateUInt($_GET['id']) || !($hack = queryHack($_GET['id']))) {
 		become404Page();

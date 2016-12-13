@@ -1,5 +1,5 @@
 <?php
-	//become404page();
+	become404page();
 	//exit();
 	function handleRegisterPost() {
 		if (!crsf_check()) {

@@ -2,6 +2,10 @@
 	if (!validateUInt($_GET['id']) || !($problem = queryProblemBrief($_GET['id']))) {
 		become404Page();
 	}
+
+	if ($myUser == null) {
+		redirectToLogin();
+	}
 	
 	$contest = validateUInt($_GET['contest_id']) ? queryContest($_GET['contest_id']) : null;
 	if ($contest != null) {
