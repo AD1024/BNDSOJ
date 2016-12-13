@@ -21,7 +21,22 @@ Route::group([
 
 		//dhxh begin
 		Route::any('/problem/{id}/manage/imgupload', '/problem_img_upload.php');
+		Route::any('/problem/{id}/manage/imgmanage','/problem_img_manage.php');
+		Route::any('/the_pantheon','/the_pantheon.php');
+		Route::any('/remoteoj','/remote_oj_problem_list.php');
+		Route::any('/remoteoj/problem','/remote_oj_problem.php');
+		Route::any('/remoteoj/submissions','/remote_oj_submissions_list.php');
+		Route::any('/remoteoj/submission/{id}','/remote_oj_submission.php');
+		Route::any('/super-manage/user-group', '/user_group_manage.php');
+		Route::any('/ajax/user-group-list', '/ajax/user_group_list.php');
 		//dhxh end
+		// AD1024 begin
+		Route::any('/homework/management','/homework/homework_manage/homework_management.php');
+		Route::any('/homework/add','/homework/homework_manage/add_homework.php');
+		Route::any('/homework/user_manage','/homework/homework_manage/user_manage.php');
+		Route::any('/homework/user_manage/{username}','/homework/homework_manage/user_manage_page.php');
+		Route::any('/api/manage/user/group','/api/UserGroupManage.php');
+		// AD1024 end
 		
 		Route::any('/contests', '/contests.php');
 		Route::any('/contest/new', '/add_contest.php');
@@ -45,7 +60,6 @@ Route::group([
 		Route::any('/blog/{id}', '/blog_show.php');
 		
 		Route::any('/announcements', '/announcements.php');
-		Route::any('/problem/{id}/manage/imgmanage','/problem_img_manage.php');
 		
 		Route::any('/faq', '/faq.php');
 		Route::any('/ranklist', '/ranklist.php?type=rating');
