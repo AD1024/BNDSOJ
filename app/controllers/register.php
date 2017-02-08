@@ -1,5 +1,5 @@
 <?php
-	become404page();
+	//become404page();
 	//exit();
 	function handleRegisterPost() {
 		if (!crsf_check()) {
@@ -36,7 +36,7 @@
 		$esc_email = DB::escape($email);
 		
 		$svn_pw = uojRandString(10);
-	mysql_query("insert into user_info (username, email, password, svn_password, register_time) values ('$username', '$esc_email', '$password', '$svn_pw', now())");
+		mysql_query("insert into user_info (username, email, password, svn_password, register_time) values ('$username', '$esc_email', '$password', '$svn_pw', now())");
 		
 		return "欢迎你！" . $username . "，你已成功注册。";
 	}
