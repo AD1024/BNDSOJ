@@ -256,6 +256,10 @@ EOD;
 		'user-group' => array(
 			'name' => '用户组管理',
 			'url' => '/super-manage/user-group'
+		),
+		'tmp-user' => array(
+			'name' => '临时用户管理',
+			'url' => '/super-manage/tmp-user'
 		)
 	);
 	
