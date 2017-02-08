@@ -77,9 +77,25 @@ EOD;
 	$search_tag = null;
 	
 	$cur_tab = isset($_GET['tab']) ? $_GET['tab'] : 'all';
+	
+	// AD1024 Begin
 	if ($cur_tab == 'template') {
 		$search_tag = "模板题";
+	}else if ($cur_tab == 'basic') {
+		$search_tag = "基础篇";
+		$level_cur_tab = 'basic';
+		$cur_tab = 'basic';
+	}else if ($cur_tab == "harder") {
+		$search_tag = "提高篇";
+		$level_cur_tab = 'harder';
+		$cur_tab = 'harder';
+	}else if ($cur_tab == "enhance") {
+		$search_tag = "进阶篇";
+		$level_cur_tab = 'enhance';
+		$cur_tab = 'enhance';
 	}
+	// AD1024 End
+
 	if (isset($_GET['tag'])) {
 		$search_tag = $_GET['tag'];
 		//dhxh begin
@@ -123,6 +139,25 @@ EOD;
 			'url' => "/remoteoj"
 		)
 	);
+	// AD1024 Begin
+	/*
+	* Func: Render data for level spliting
+	* */
+	$level_tab_info = array(
+		'basic' => array(
+			'name' => UOJLocale::get('problems::level_basic'),
+			'url' => "/problems/basic"
+		),
+		'harder' => array(
+			'name' => UOJLocale::get('problems::level_promote'),
+			'url' => "/problems/harder"
+		),
+		'enhance' => array(
+			'name' => UOJLocale::get('problems::level_enhance'),
+			'url' => "/problems/enhance"
+		)
+	);
+	// AD1024 End
 	
 	/*
 	<?php
@@ -165,6 +200,11 @@ EOD;
 	</div>
 	<div class="col-sm-4 col-sm-pull-4">
 	<?php echo $pag->pagination(); ?>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<?= HTML::tablist($level_tab_info, $level_cur_tab, 'nav-pills') ?>
 	</div>
 </div>
 <div class="top-buffer-sm"></div>
