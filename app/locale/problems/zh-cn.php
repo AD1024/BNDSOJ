@@ -44,5 +44,8 @@ return [
 	'submission id' => '提交记录ID',
 	'my submissions' => '我的提交记录',
 	'hacks by me' => '我的Hack记录',
-	'hacks to me' => '我的被Hack记录'
+	'hacks to me' => '我的被Hack记录',
+	'level_basic' => '基础篇',
+	'level_promote' => '提高篇',
+	'level_enhance' => '进阶篇'
 ];

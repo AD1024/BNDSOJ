@@ -3,6 +3,7 @@ return [
 	'login' => 'Login',
 	'register' => 'Register',
 	'logout' => 'Logout',
+	'the pantheon' => 'The Pantheon',
 	'my profile' => 'My Profile',
 	'private message' => 'Private Message',
 	'system message' => 'System Message',
@@ -10,6 +11,8 @@ return [
 	'contests' => 'Contests',
 	'problems' => 'Problems',
 	'submissions' => 'Submissions',
+	'local submissions' => 'Local Submissions',
+	'remote submissions' => 'Remote Submissions',
 	'hacks' => 'Hack!',
 	'blogs' => 'Blogs',
 	'announcements' => 'Announcements',
@@ -62,5 +65,13 @@ return [
 	'enter your QQ' => 'Enter your QQ',
 	'refuse to answer' => 'Refuse to answer',
 	'male' => 'Male',
-	'female' => 'Female'
+	'female' => 'Female',
+	'homework_management' => 'Homework Management',
+	'add_new_homework' => 'Add New Homework',
+	'user_group_manage' => 'Manage User Group',
+	'usergroup' => 'User Group',
+	'no_category' => 'Uncategorized',
+	'change_user_group' => 'Change User Group To',
+	'change_user_pass' => 'Change User Password',
+	'user_alternation' => 'User Operation'
 ];

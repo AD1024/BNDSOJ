@@ -3,6 +3,7 @@ return [
 	'login' => '登录',
 	'register' => '注册',
 	'logout' => '登出',
+	'the pantheon' => '万神殿',
 	'my profile' => '个人信息',
 	'private message' => '私信',
 	'system message' => '系统消息',
@@ -10,6 +11,8 @@ return [
 	'contests' => '比赛',
 	'problems' => '题库',
 	'submissions' => '提交记录',
+	'local submissions' => '本地提交记录',
+	'remote submissions' => '远程提交记录',
 	'hacks' => 'Hack!',
 	'blogs' => '博客',
 	'announcements' => '公告',
@@ -62,5 +65,13 @@ return [
 	'enter your QQ' => '输入QQ',
 	'refuse to answer' => '拒绝回答',
 	'male' => '男',
-	'female' => '女'
+	'female' => '女',
+	'homework_management' => '作业管理系统',
+	'add_new_homework' => '添加新作业',
+	'user_group_manage' => '管理用户组',
+	'usergroup' => '用户组',
+	'no_category' => '未分类',
+	'change_user_group' => '将用户组变更为',
+	'change_user_pass' => '更改用户密码',
+	'user_alternation' => '用户操作'
 ];

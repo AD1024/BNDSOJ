@@ -44,5 +44,8 @@ return [
 	'submission id' => 'Submission ID',
 	'my submissions' => 'My Submissions',
 	'hacks by me' => 'Hacks by me',
-	'hacks to me' => 'Hacks to me'
+	'hacks to me' => 'Hacks to me',
+	'level_basic' => 'Basic Level',
+	'level_promote' => 'Harder Level',
+	'level_enhance' => 'Self Improvement Level'
 ];
