@@ -20,6 +20,9 @@ Route::group([
 		Route::any('/problem/{id}/manage/data', '/problem_data_manage.php');
 
 		//dhxh begin
+		Route::any('/problems/basic', '/problem_set.php?tab=basic');
+		Route::any('/problems/harder', '/problem_set.php?tab=harder');
+		Route::any('/problems/enhance', '/problem_set.php?tab=enhance');
 		Route::any('/problem/{id}/manage/imgupload', '/problem_img_upload.php');
 		Route::any('/problem/{id}/manage/imgmanage','/problem_img_manage.php');
 		Route::any('/the_pantheon','/the_pantheon.php');
@@ -28,8 +31,14 @@ Route::group([
 		Route::any('/remoteoj/submissions','/remote_oj_submissions_list.php');
 		Route::any('/remoteoj/submission/{id}','/remote_oj_submission.php');
 		Route::any('/super-manage/user-group', '/user_group_manage.php');
+		Route::any('/super-manage/tmp-user', '/tmp_user_manage.php');
 		Route::any('/ajax/user-group-list', '/ajax/user_group_list.php');
+		Route::any('/ajax/user-group-manage', '/ajax/user_group_manage.php');
+		Route::any('/ajax/user-group-user-list', '/ajax/user_group_user_list.php');
+		Route::any('/ajax/user-group-nuser-list', '/ajax/user_group_nuser_list.php');
+		Route::any('/ajax/tmp-user-list', '/ajax/tmp_user_list.php');
 		//dhxh end
+
 		// AD1024 begin
 		Route::any('/homework/management','/homework/homework_manage/homework_management.php');
 		Route::any('/homework/add','/homework/homework_manage/add_homework.php');
