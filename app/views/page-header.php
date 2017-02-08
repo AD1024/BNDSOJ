@@ -237,6 +237,9 @@
 							<li role="presentation"><a href="<?= HTML::url('/user/system-msg') ?>"><?= UOJLocale::get('system message') ?>&nbsp;&nbsp;<?= $new_system_msg_num_html ?></a></li>
 							<?php if (isSuperUser(Auth::user())): ?>
 								<li role="presentation"><a href="<?= HTML::url('/super-manage') ?>"><?= UOJLocale::get('system manage') ?></a></li>
+								<!--- AD1024 Begin --->
+								<li role="presentation"><a href="/homework/management"><?=UOJLocale::get('homework_management')?></a></li>
+								<!--- AD1024 End --->
 							<?php endif ?>
 						</ul>
 					</li>

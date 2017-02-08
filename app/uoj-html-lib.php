@@ -151,7 +151,7 @@ function echoLongTable($col_names, $table_name, $cond, $tail, $header_row, $prin
 
 	
 
-	if($config['is_rank_list']){
+	/*if($config['is_rank_list']){
 		$print_row_unrated = function($user, $now_cnt) use(&$users) {
 			if (!$users) {
 				$rank = DB::selectCount("select count(*) from user_info where rating > {$user['rating']}") + 1;
@@ -208,7 +208,7 @@ function echoLongTable($col_names, $table_name, $cond, $tail, $header_row, $prin
 				}
 			}
 		}
-	}else{
+	}else{*/
 		foreach ($pag->get() as $idx => $row) {
 			if (isset($config['get_row_index'])) {
 				$print_row($row, $idx);
@@ -216,7 +216,7 @@ function echoLongTable($col_names, $table_name, $cond, $tail, $header_row, $prin
 				$print_row($row);
 			}
 		}
-	}
+	//}
 
 	//dhxh end
 
@@ -1002,7 +1002,7 @@ function echoRanklist($config = array()) {
 		}
 
 		//dhxh begin
-		$isb = DB::selectCount("select count(*) from contests_registrants where username = '{$user['username']}' and has_participated = 1");
+		/*$isb = DB::selectCount("select count(*) from contests_registrants where username = '{$user['username']}' and has_participated = 1");
 		
 		if($isb != 0){
 			$user['rank'] = $rank;
@@ -1023,10 +1023,11 @@ function echoRanklist($config = array()) {
 			return 0;
 		}
 
-		return 1;
+		return 1;*/
 		//dhxh end
 		
-		/*$user['rank'] = $rank;
+		///*
+		$user['rank'] = $rank;
 		
 		echo '<tr>';
 		echo '<td>' . $user['rank'] . '</td>';
@@ -1035,16 +1036,25 @@ function echoRanklist($config = array()) {
 		echo '<td>' . $user['rating'] . '</td>';
 		echo '</tr>';
 		
-		$users[] = $user;*/
+		$users[] = $user;
+		//*/
 	};
 	$col_names = array('username', 'rating', 'motto');
 	$tail = 'order by rating desc, username asc';
 	
-	/*if (isset($config['top10'])) {
+	///*
+	if (isset($config['top10'])) {
 		$tail .= ' limit 10';
-	}*/
+	}
+	//*/
+
+	//dhxh begin
+	$conds = "!(username like 'test%') and !(username like 'tmp%')";
+	//dhxh end
+
 	$config['is_rank_list'] = '1';
 	
 	$config['get_row_index'] = '';
-	echoLongTable($col_names, 'user_info', '1', $tail, $header_row, $print_row, $config);
+	
+	echoLongTable($col_names, 'user_info', $conds, $tail, $header_row, $print_row, $config);
 }
