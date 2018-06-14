@@ -48,7 +48,13 @@
 				echo '<td>';
 			}
 			echo '#', $problem['id'], '</td>';
-			echo '<td class="text-left">', '<a href="/problem/', $problem['id'], '">', $problem['title'], '</a>';
+			// AD1024 begin
+			if(isSuperUser($myUser)) {
+				echo '<td class="text-left">', '<a href="/problem/', $problem['id'], '">', $problem['title'], '</a>'.('<strong>'.($problem['is_hidden']?"  (未公开)":"").'</strong>');
+			} else {
+				echo '<td class="text-left">', '<a href="/problem/', $problem['id'], '">', $problem['title'], '</a>';
+			}
+			// AD1024 end
 			if (isset($_COOKIE['show_tags_mode'])) {
 				foreach (queryProblemTags($problem['id']) as $tag) {
 					echo '<a class="uoj-problem-tag">', '<span class="badge">', HTML::escape($tag), '</span>', '</a>';
