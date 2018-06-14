@@ -1,6 +1,10 @@
 <?php
 	requirePHPLib('form');
 	
+	if ($myUser == null) {
+		redirectToLogin();
+	}
+	
 	if (!validateUInt($_GET['id']) || !($contest = queryContest($_GET['id']))) {
 		become404Page();
 	}
@@ -16,6 +20,14 @@
 			}
 		}
 	}
+	
+	//dhxh begin
+	
+	if(!hasContestPermission($myUser, $contest) and !hasRegistered($myUser, $contest)){
+		becomeMsgPage("<h1>比赛已结束</h1><p>很遗憾，您未报名。比赛对您不可见～</p>");
+	}
+	
+	//dhxh end
 
 	if (isset($_POST['check_notice'])) {
 		$result = mysql_query("select * from contests_notice where contest_id = '${contest['id']}' order by time desc limit 1");
@@ -71,6 +83,58 @@
 
 		return array('problems' => $problems, 'data' => $data, 'people' => $people);
 	}
+	
+	//dhxh begin
+	//The standings after modify
+	
+	function queryModifyContestData() {
+		global $contest;
+		$problems = array();
+		$prob_pos = array();
+		$n_problems = 0;
+		$result = mysql_query("select problem_id from contests_problems where contest_id = ${contest['id']} order by problem_id");
+		while ($row = mysql_fetch_array($result, MYSQL_NUM)) {
+			$prob_pos[$problems[] = (int)$row[0]] = $n_problems++;
+		}
+		
+		$sql = mysql_query("select problem_id from contests_problems where contest_id = ${contest['id']} order by problem_id");
+		
+		$conds = "(";
+		
+		$flag = false;
+		
+		while($info = mysql_fetch_array($sql)){
+			if($flag){
+				$conds .= ' or ';
+			}else{
+				$flag = true;
+			}
+			$conds = $conds.'problem_id = '.$info['problem_id'];
+		}
+		
+		$conds .= ')';
+		
+		$data = array();
+		$result = mysql_query("select id, submit_time, submitter, problem_id, score from submissions where ".$conds." and score is not null order by score asc, used_time desc, used_memory desc");
+
+		while ($row = mysql_fetch_array($result, MYSQL_NUM)) {
+			$row[0] = (int)$row[0];
+			$row[3] = $prob_pos[$row[3]];
+			$row[4] = (int)$row[4];
+			$data[] = $row;
+		}
+		
+		$people = array();
+		$result = mysql_query("select username, user_rating from contests_registrants where contest_id = {$contest['id']} and has_participated = 1");
+		while ($row = mysql_fetch_array($result, MYSQL_NUM)) {
+			$row[1] = (int)$row[1];
+			$people[] = $row;
+		}
+
+		return array('problems' => $problems, 'data' => $data, 'people' => $people);
+	}
+	
+	//dhxh end
 
 	function calcStandings($contest_data, &$score, &$standings, $update_contests_submissions = false) {
 		global $contest;
@@ -80,7 +144,15 @@
 		$n_people = count($contest_data['people']);
 		$n_problems = count($contest_data['problems']);
 		foreach ($contest_data['people'] as $person) {
-			$score[$person[0]] = array();
+			//dhxh begin
+			//$score[$person[0]] = array();
+			$user = queryUser($person[0]);
+			$tmpd = $person[0];
+			if($user['realname']){
+				$tmpd = $tmpd.'('.$user['realname'].')';
+			}
+			$score[$tmpd] = array();
+			//dhxh end
 		}
 		foreach ($contest_data['data'] as $submission) {		
 			$penalty = (new DateTime($submission[1]))->getTimestamp() - $contest['start_time']->getTimestamp();
@@ -89,14 +161,30 @@
 					$penalty = 0;
 				}
 			}
-			$score[$submission[2]][$submission[3]] = array($submission[4], $penalty, $submission[0]);
+			//dhxh begin
+			//$score[$submission[2]][$submission[3]] = array($submission[4], $penalty, $submission[0]);
+			$user = queryUser($submission[2]);
+			$tmpd = $submission[2];
+			if($user['realname']){
+				$tmpd = $tmpd.'('.$user['realname'].')';
+			}
+			$score[$tmpd][$submission[3]] = array($submission[4], $penalty, $submission[0]);
+			//dhxh end
 		}
 
 		// standings: rank => score, penalty, [username, user_rating], virtual_rank
 		$standings = array();
 		foreach ($contest_data['people'] as $person) {
-			$cur = array(0, 0, $person);
-			for ($i = 0; $i < $n_problems; $i++) {
+			//dhxh begin
+			$tmpd = $person;
+			$user = queryUser($person[0]);
+			if($user['realname']){
+				$tmpd[0] = $tmpd[0].'('.$user['realname'].')';
+			}
+			$cur = array(0, 0, $tmpd);
+			//$cur = array(0, 0, $person);
+			
+			/*for ($i = 0; $i < $n_problems; $i++) {
 				if (isset($score[$person[0]][$i])) {
 					$cur_row = $score[$person[0]][$i];
 					$cur[0] += $cur_row[0];
@@ -105,7 +193,19 @@
 						DB::insert("insert into contests_submissions (contest_id, submitter, problem_id, submission_id, score, penalty) values ({$contest['id']}, '{$person[0]}', {$contest_data['problems'][$i]}, {$cur_row[2]}, {$cur_row[0]}, {$cur_row[1]})");
 					}
 				}
+			}*/
+			for ($i = 0; $i < $n_problems; $i++) {
+				if (isset($score[$tmpd[0]][$i])) {
+					$cur_row = $score[$tmpd[0]][$i];
+					$cur[0] += $cur_row[0];
+					$cur[1] += $cur_row[1];
+					if ($update_contests_submissions) {
+						DB::insert("insert into contests_submissions (contest_id, submitter, problem_id, submission_id, score, penalty) values ({$contest['id']}, '{$person[0]}', {$contest_data['problems'][$i]}, {$cur_row[2]}, {$cur_row[0]}, {$cur_row[1]})");
+					}
+				}
 			}
+
+			//dhxh end
 			$standings[] = $cur;
 		}
 
@@ -185,7 +285,12 @@
 				}
 
 				for ($i = 0; $i < count($standings); $i++) {
-					$user = queryUser($standings[$i][2][0]);
+					//dhxh begin
+					$tmp = explode('(',$standings[$i][2][0]);
+					//$user = queryUser($standings[$i][2][0]);
+					$user = queryUser($tmp[0]);
+					
+					//dhxh end
 					$change = $ratings[$i] - $user['rating'];
 					$user_link = getUserLink($user['username']);
 
@@ -202,8 +307,12 @@ EOD;
 EOD;
 					}
 					sendSystemMsg($user['username'], 'Rating变化通知', $content);
-					mysql_query("update user_info set rating = {$ratings[$i]} where username = '{$standings[$i][2][0]}'");
-					mysql_query("update contests_registrants set rank = {$standings[$i][3]} where contest_id = {$contest['id']} and username = '{$standings[$i][2][0]}'");
+					//dhxh begin
+					//mysql_query("update user_info set rating = {$ratings[$i]} where username = '{$standings[$i][2][0]}'");
+					//mysql_query("update contests_registrants set rank = {$standings[$i][3]} where contest_id = {$contest['id']} and username = '{$standings[$i][2][0]}'");
+					mysql_query("update user_info set rating = {$ratings[$i]} where username = '{$user['username']}'");
+					mysql_query("update contests_registrants set rank = {$standings[$i][3]} where contest_id = {$contest['id']} and username = '{$user['username']}'");
+					//dhxh end
 				}
 				mysql_query("update contests set status = 'finished' where id = {$contest['id']}");
 			};
@@ -313,6 +422,7 @@ EOD;
 		global $contest;
 		
 		$contest_data = queryContestData();
+		//$contest_data = queryModifyContestData();
 		calcStandings($contest_data, $score, $standings);
 
 		echo '<div id="standings">';
@@ -334,6 +444,37 @@ EOD;
 		echo '$(document).ready(showStandings());';
 		echo '</script>';
 	}
+	
+	//dhxh begin
+	//Echo Modify Standing
+	
+	function echoModifyStandings() {
+		global $contest;
+		
+		$contest_data = queryModifyContestData();
+		calcStandings($contest_data, $score, $standings);
+
+		echo '<div id="standings">';
+		echo '</div>';
+
+		/*
+		echo '<div class="table-responsive">';
+		echo '<table id="standings-table" class="table table-bordered table-striped table-text-center table-vertical-middle">';
+		echo '</table>';
+		echo '</div>';
+		 */
+
+		echo '<script type="text/javascript">';
+		echo 'standings_version=', $contest['extra_config']['standings_version'], ';';
+		echo 'contest_id=', $contest['id'], ';';
+		echo 'standings=', json_encode($standings), ';';
+		echo 'score=', json_encode($score), ';';
+		echo 'problems=', json_encode($contest_data['problems']), ';';
+		echo '$(document).ready(showStandings());';
+		echo '</script>';
+	}
+	
+	//dhxh end
 	
 	function echoContestCountdown() {
 		global $contest;
@@ -416,6 +557,9 @@ EOD;
 	};
 	$post_notice->runAtServer();
 	
+	//dhxh begin
+	
+	/*
 	$tabs_info = array(
 		'dashboard' => array(
 			'name' => UOJLocale::get('contests::contest dashboard'),
@@ -428,8 +572,56 @@ EOD;
 		'standings' => array(
 			'name' => UOJLocale::get('contests::contest standings'),
 			'url' => "/contest/{$contest['id']}/standings"
+		),
+		'modify_standings' => array(
+			'name' => UOJLocale::get('contests::contest modify standings'),
+			'url' => "/contest/{$contest['id']}/standings"
 		)
 	);
+	*/
+	
+	if ($contest['cur_progress'] <= CONTEST_IN_PROGRESS or $contest['cur_progress'] <= CONTEST_TESTING) {
+		$tabs_info = array(
+			'dashboard' => array(
+				'name' => UOJLocale::get('contests::contest dashboard'),
+				'url' => "/contest/{$contest['id']}"
+			),
+			'submissions' => array(
+				'name' => UOJLocale::get('contests::contest submissions'),
+				'url' => "/contest/{$contest['id']}/submissions"
+			),
+			'standings' => array(
+				'name' => UOJLocale::get('contests::contest standings'),
+				'url' => "/contest/{$contest['id']}/standings"
+			)
+		);
+	} else {
+		$tabs_info = array(
+			'dashboard' => array(
+				'name' => UOJLocale::get('contests::contest dashboard'),
+				'url' => "/contest/{$contest['id']}"
+			),
+			'submissions' => array(
+				'name' => UOJLocale::get('contests::contest submissions'),
+				'url' => "/contest/{$contest['id']}/submissions"
+			),
+			'standings' => array(
+				'name' => UOJLocale::get('contests::contest standings'),
+				'url' => "/contest/{$contest['id']}/standings"
+			),
+			'modify_standings' => array(
+				'name' => UOJLocale::get('contests::contest modify standings'),
+				'url' => "/contest/{$contest['id']}/correctionstandings"
+			)
+		);
+	}
+	
+	if (($contest['cur_progress'] <= CONTEST_IN_PROGRESS or $contest['cur_progress'] <= CONTEST_TESTING) and $cur_tab == 'modify_standings') {
+		become404Page();
+	}
+	
+	//The following "$cur_tab == 'modify_standings'" is add by dhxh
+	//dhxh end
 	
 	if (!isset($tabs_info[$cur_tab])) {
 		become404Page();
@@ -443,7 +635,7 @@ EOD;
 	<?= getClickZanBlock('C', $contest['id'], $contest['zan']) ?>
 </div>
 <div class="row">
-	<?php if ($cur_tab == 'standings'): ?>
+	<?php if ($cur_tab == 'standings' or $cur_tab == 'modify_standings'): ?>
 	<div class="col-sm-12">
 	<?php else: ?>
 	<div class="col-sm-9">
@@ -457,12 +649,14 @@ EOD;
 				echoMySubmissions();
 			} elseif ($cur_tab == 'standings') {
 				echoStandings();
+			} elseif ($cur_tab == 'modify_standings') {
+				echoModifyStandings();
 			}
 		?>
 		</div>
 	</div>
 	
-	<?php if ($cur_tab == 'standings'): ?>
+	<?php if ($cur_tab == 'standings' or $cur_tab == 'modify_standings'): ?>
 	<div class="col-sm-12">
 		<hr />
 	</div>
@@ -478,7 +672,7 @@ EOD;
 				echoContestFinished();
 			}
 		?>
-		<?php if ($cur_tab == 'standings'): ?>
+		<?php if ($cur_tab == 'standings' or $cur_tab == 'modify_standings'): ?>
 	</div>
 	<div class="col-sm-3">
 	<?php endif ?>
@@ -501,7 +695,7 @@ EOD;
 		<?php endif ?>
 	
 		<?php if ($contest['extra_config']['links']) { ?>
-			<?php if ($cur_tab == 'standings'): ?>
+			<?php if ($cur_tab == 'standings' or $cur_tab == 'modify_standings'): ?>
 	</div>
 	<div class="col-sm-3">
 		<div class="panel panel-info">

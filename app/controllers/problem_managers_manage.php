@@ -38,6 +38,9 @@
 	<li><a href="/problem/<?= $problem['id'] ?>/manage/statement" role="tab">编辑</a></li>
 	<li class="active"><a href="/problem/<?= $problem['id'] ?>/manage/managers" role="tab">管理者</a></li>
 	<li><a href="/problem/<?= $problem['id'] ?>/manage/data" role="tab">数据</a></li>
+	<?php //dhxh begin ?>
+	<li><a href="/problem/<?= $problem['id'] ?>/manage/solution" role="tab">题解管理</a></li>
+	<?php //dhxh end ?>
 	<li><a href="/problem/<?=$problem['id']?>" role="tab">返回</a></li>
 </ul>
 

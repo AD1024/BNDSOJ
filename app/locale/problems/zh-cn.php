@@ -47,5 +47,6 @@ return [
 	'hacks to me' => '我的被Hack记录',
 	'level_basic' => '基础篇',
 	'level_promote' => '提高篇',
-	'level_enhance' => '进阶篇'
+	'level_enhance' => '进阶篇',
+	'solution' => '题解'
 ];

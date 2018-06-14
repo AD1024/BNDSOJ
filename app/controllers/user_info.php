@@ -22,6 +22,12 @@
 			$col_sex="color:black";
 		}
 		$esc_motto = HTML::escape($user['motto']);
+		//dhxh begin
+		$esc_realname = HTML::escape($user['realname']);
+		if($esc_realname){
+			$esc_realname = '('.$esc_realname.')';
+		}
+		//dhxh end
 	?>
 	<div class="panel panel-info">
 		<div class="panel-heading">
@@ -33,7 +39,7 @@
 					<img class="media-object img-thumbnail center-block" alt="<?= $user['username'] ?> Avatar" src="<?= HTML::avatar_addr($user, 256) ?>" />
 				</div>
 				<div class="col-md-8 col-md-pull-4">
-					<h2><span class="uoj-honor" data-rating="<?= $user['rating'] ?>"><?= $user['username'] ?></span> <span><strong style="<?= $col_sex ?>"><?= $esc_sex ?></strong></span></h2>
+					<h2><span class="uoj-honor" data-rating="<?= $user['rating'] ?>"><?= $user['username'].$esc_realname ?></span> <span><strong style="<?= $col_sex ?>"><?= $esc_sex ?></strong></span></h2>
 					<div class="list-group">
 						<div class="list-group-item">
 							<h4 class="list-group-item-heading"><?= UOJLocale::get('rating') ?></h4>
@@ -100,6 +106,14 @@
 					?>
 					</p>
 				</div>
+				
+				<?php //dhxh begin ?>
+				<?php if(isSuperUser($myUser) and !empty($ac_problems)): ?>
+				<div class="list-group-item">
+					<a class="btn btn-primary" href="/user/aclist/<?php echo $username;?>">查看AC题目列表</a>
+				</div>
+				<?php endif ?>
+				<?php //dhxh end ?>
 			</div>
 		</div>
 	</div>

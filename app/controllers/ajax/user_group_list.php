@@ -44,6 +44,13 @@
 				$sql = mysql_query("select * from user_group where ".$cond." order by id asc;");
 				while($info = mysql_fetch_array($sql)){
 					$cnt++;
+					if($cnt <= ($page-1) * 10){
+						continue;
+					}
+
+					if($cnt > $page * 10){
+						break;
+					}
 		?>
 
 		<tr>
@@ -61,3 +68,33 @@
 	</tbody>
 </table>
 
+<div class="text-center">
+	<ul class="pagination top-buffer-no bot-buffer-sm">
+		<li<?php if($page==1)echo ' class="disabled"'; ?>>
+			<?php echo '<a href="javascript:reflash('.($page-1).')"';?>>
+				<span class="glyphicon glyphicon glyphicon-backward"></span>
+			</a>
+		</li>
+		<?php
+		$j = $page - 2;
+		if($j<1)$j = 1;
+		$imax = 5;
+		if($imax > $page_cnt)$imax=$page_cnt;
+		for($i=1;$i<=$imax;$i++){
+			if($j==$page){
+				echo '<li class="active">';
+			}else{
+				echo '<li>';
+			}
+			echo '<a href="javascript:reflash('.$j.');">'.$j.'</a></li>';
+			$j++;
+		}
+				
+		?>
+		<li<?php if($page==$page_cnt)echo ' class="disabled"'; ?>>
+			<?php echo '<a href="javascript:reflash('.($page+1).')"';?>>
+				<span class="glyphicon glyphicon glyphicon-forward"></span>
+			</a>
+		</li>
+	</ul>
+</div>

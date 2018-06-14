@@ -74,7 +74,14 @@ function getUserLink($username, $rating = null) {
 		if ($rating == null) {
 			$rating = $user['rating'];
 		}
-		return '<span class="uoj-username" data-rating="'.$rating.'">'.$username.'</span>';
+		
+		//dhxh begin
+		if($user['realname']){
+			$realname = '('.$user['realname'].')';
+		}
+		//dhxh end
+
+		return '<span class="uoj-username" data-rating="'.$rating.'">'.$username.$realname.'</span>';
 	} else {
 		$esc_username = HTML::escape($username);
 		return '<span>'.$esc_username.'</span>';
@@ -149,75 +156,13 @@ function echoLongTable($col_names, $table_name, $cond, $tail, $header_row, $prin
 
 	//dhxh begin
 
-	
-
-	/*if($config['is_rank_list']){
-		$print_row_unrated = function($user, $now_cnt) use(&$users) {
-			if (!$users) {
-				$rank = DB::selectCount("select count(*) from user_info where rating > {$user['rating']}") + 1;
-			} else if ($user['rating'] == $users[count($users) - 1]['rating']) {
-				$rank = $users[count($users) - 1]['rank'];
-			} else {
-				$rank = $now_cnt;
-			}
-			$isb = DB::selectCount("select count(*) from contests_registrants where username = '{$user['username']}' and has_participated = 1");
-			
-			if($isb == 0){
-				$rank = DB::selectCount("select count(distinct username) from contests_registrants where has_participated = 1") + 1;
-				$user['rank'] = $rank;
-			
-				echo '<tr>';
-				echo '<td>' . $user['rank'] . '</td>';
-				echo '<td>' . getUserLink($user['username']) . '</td>';
-				echo '<td>' . HTML::escape($user['motto']) . '</td>';
-				echo '<td>Unrated</td>';
-				echo '</tr>';
-			}else{
-				return 0;
-			}
-			return 1;
-		};
-
-		if(isset($config['top10'])){
-			$cnt_top_ten = 0;
-			foreach ($pag->get() as $idx => $row) {
-				if($cnt_top_ten >= 10){
-					break;
-				}
-				if (isset($config['get_row_index'])) {
-					$cnt_top_ten = $cnt_top_ten + $print_row($row, $idx);
-				} else {
-					$cnt_top_ten = $cnt_top_ten + $print_row($row);
-				}
-
-			}
-		}else{
-			foreach ($pag->get() as $idx => $row) {
-				if (isset($config['get_row_index'])) {
-					$print_row($row, $idx);
-				} else {
-					$print_row($row);
-				}
-			}
-
-			foreach ($pag->get() as $idx => $row) {
-				if (isset($config['get_row_index'])) {
-					$print_row_unrated($row, $idx);
-				} else {
-					$print_row_unrated($row);
-				}
-			}
+	foreach ($pag->get() as $idx => $row) {
+		if (isset($config['get_row_index'])) {
+			$print_row($row, $idx);
+		} else {
+			$print_row($row);
 		}
-	}else{*/
-		foreach ($pag->get() as $idx => $row) {
-			if (isset($config['get_row_index'])) {
-				$print_row($row, $idx);
-			} else {
-				$print_row($row);
-			}
-		}
-	//}
-
+	}
 	//dhxh end
 
 	if ($pag->isEmpty()) {
@@ -422,7 +367,10 @@ function echoSubmissionsList($cond, $tail, $config, $user) {
 	
 	if (!isSuperUser($user)) {
 		if ($user != null) {
-			$permission_cond = "submissions.is_hidden = false or (submissions.is_hidden = true and submissions.problem_id in (select problem_id from problems_permissions where username = '{$user['username']}'))";
+			//dhxh bgein
+			//$permission_cond = "submissions.is_hidden = false or (submissions.is_hidden = true and submissions.problem_id in (select problem_id from problems_permissions where username = '{$user['username']}'))";
+			$permission_cond = "submissions.is_hidden = false or (submissions.is_hidden = true and submissions.problem_id in (select problem_id from problems_permissions where username = '{$user['username']}')) or (select count(*) from contests where contests.status = 'finished' and (select count(*) from contests_problems where contests_problems.problem_id = submissions.problem_id and contests_problems.contest_id = contests.id) > 0 and (select count(*) from contests_registrants where username = '${user['username']}' and contests_registrants.contest_id = contests.id) > 0) > 0";
+			//dhxh end
 		} else {
 			$permission_cond = "submissions.is_hidden = false";
 		}
@@ -982,14 +930,39 @@ function echoUOJPageFooter($config = array()) {
 	uojIncludeView('page-footer', $config);
 }
 
+//dhxh begin
+
+function dhxhCalcRating(){
+	$sql = mysql_query("select * from user_info;");
+	while($info = mysql_fetch_array($sql)){
+		$rating = 1000.0;
+
+		$sqlb = mysql_query("select * from best_ac_submissions where submitter = '".$info['username']."';");
+
+		while($infob = mysql_fetch_array($sqlb)){
+			$ac_cnt = DB::selectCount("select count(*) from best_ac_submissions where problem_id = ".$infob['problem_id'].";");
+			$rating = $rating + 200.0 / (40 + $ac_cnt);
+		}
+
+		mysql_query("update user_info set rating = ".round($rating, 3)." where username = '".$info['username']."';");
+	}
+}
+
+//dhxh end
+
 function echoRanklist($config = array()) {
 	$header_row = '';
 	$header_row .= '<tr>';
 	$header_row .= '<th style="width: 5em;">#</th>';
 	$header_row .= '<th style="width: 14em;">'.UOJLocale::get('username').'</th>';
 	$header_row .= '<th style="width: 50em;">'.UOJLocale::get('motto').'</th>';
+	//不显示格言，将上一行屏蔽掉
 	$header_row .= '<th style="width: 5em;">'.UOJLocale::get('rating').'</th>';
 	$header_row .= '</tr>';
+
+	//dhxh begin
+	//dhxhCalcRating();
+	//dhxh end
 	
 	$users = array();
 	$print_row = function($user, $now_cnt) use(&$users) {
@@ -1000,56 +973,43 @@ function echoRanklist($config = array()) {
 		} else {
 			$rank = $now_cnt;
 		}
-
-		//dhxh begin
-		/*$isb = DB::selectCount("select count(*) from contests_registrants where username = '{$user['username']}' and has_participated = 1");
-		
-		if($isb != 0){
-			$user['rank'] = $rank;
-
-			if($user['rating'] < 1500){
-				$cnt_not_participated = DB::selectCount("select count(distinct username) from contests_registrants where has_participated = 1");
-				$cnt_not_participated = DB::selectCount("select count(*) from user_info") - $cnt_not_participated;
-				$user['rank'] = $rank - $cnt_not_participated;
-			}
-		
-			echo '<tr>';
-			echo '<td>' . $user['rank'] . '</td>';
-			echo '<td>' . getUserLink($user['username']) . '</td>';
-			echo '<td>' . HTML::escape($user['motto']) . '</td>';
-			echo '<td>' . $user['rating'] . '</td>';
-			echo '</tr>';
-		}else{
-			return 0;
-		}
-
-		return 1;*/
-		//dhxh end
-		
-		///*
 		$user['rank'] = $rank;
 		
 		echo '<tr>';
-		echo '<td>' . $user['rank'] . '</td>';
+		if($user['username'] == 'sekong_qi') {
+			echo '<td><b style="color:white">' . $user['rank'] . '</b></td>';
+		} else {
+			echo '<td>' . $user['rank'] . '</td>';
+		}
 		echo '<td>' . getUserLink($user['username']) . '</td>';
-		echo '<td>' . HTML::escape($user['motto']) . '</td>';
-		echo '<td>' . $user['rating'] . '</td>';
+		if($user['username'] == 'sekong_qi' || $user['username'] == 'livingshade' || $user['username'] == 'AloNE') {
+			echo '<td>' . $user['motto'] . '</td>';
+		} else {
+			echo '<td>' . HTML::escape($user['motto']) . '</td>';
+		}
+		//不显示格言，将上一行屏蔽掉
+		if($user['username'] == 'sekong_qi') {
+			echo '<td><b style="color:white">' . $user['rating'] . '</b></td>';
+		} else {
+			echo '<td>' . $user['rating'] . '</td>';
+		}
 		echo '</tr>';
 		
 		$users[] = $user;
-		//*/
 	};
 	$col_names = array('username', 'rating', 'motto');
+
+
 	$tail = 'order by rating desc, username asc';
 	
-	///*
 	if (isset($config['top10'])) {
 		$tail .= ' limit 10';
 	}
-	//*/
 
 	//dhxh begin
-	$conds = "!(username like 'test%') and !(username like 'tmp%')";
+	//$conds = "!(username like 'test%') and !(username like 'tmp%')";
+	$conds = "!(username like 'tmp%')";
+	//$conds = "(select count(*) from contests_registrants where username = user_info.username and has_participated = 1 and !(select count(*) from contests where id = contests_registrants.contest_id and extra_config like '%unrated%')) > 0 and !(username like 'tmp%')";
 	//dhxh end
 
 	$config['is_rank_list'] = '1';

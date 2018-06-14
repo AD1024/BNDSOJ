@@ -1,6 +1,10 @@
 <?php
 	requirePHPLib('form');
 	
+	if ($myUser == null) {
+		redirectToLogin();
+	}
+	
 	if (!validateUInt($_GET['id']) || !($contest = queryContest($_GET['id']))) {
 		become404Page();
 	}

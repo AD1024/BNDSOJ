@@ -19,9 +19,12 @@
 					</ul>
 				</li>
 				<li><a href="/hacks"><?= UOJLocale::get('hacks') ?></a></li>
-				<li><a href="/the_pantheon"><?= UOJLocale::get('the pantheon') ?></a></li>
-				<li><a href="/blogs"><?= UOJLocale::get('blogs') ?></a></li>
+				<li><a href="/homework"><?= UOJLocale::get('homework') ?></a></li>
+				<?php /*<li><a href="/the_pantheon"><?= UOJLocale::get('the pantheon') ?></a></li> */ ?>
+				<?php /*<li><a href="/materials">课堂资料</a></li> */ ?>
+				<li><a href="/materials"><?= UOJLocale::get('blogs') ?></a></li>
 				<li><a href="/faq"><?= UOJLocale::get('help') ?></a></li>
+				<?php /*<li><a href="http://bnds.tech">BNDSOJ for Contest</a></li>*/?>
 			</ul>
 		</div><!--/.nav-collapse -->
 	</div>

@@ -45,6 +45,10 @@
 	};
 	$time_form->succ_href="/contests";
 	$time_form->runAtServer();
+	
+	//dhxh begin
+	$REQUIRE_LIB['dtp'] = '';
+	//dhxh end
 ?>
 <?php echoUOJPageHeader('添加比赛') ?>
 <h1 class="page-header">添加比赛</h1>
@@ -53,4 +57,21 @@
 	$time_form->printHTML();
 ?>
 </div>
+
+<?php //dhxh begin ?>
+<script>
+	$('.form_datetime').datetimepicker({
+		language:  'zh-CN',
+		weekStart: 1,
+		todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		forceParse: 0,
+		showMeridian: 1
+	});
+	$("#input-start_time").datetimepicker({format: 'yyyy-mm-dd hh:ii'});
+</script>
+<?php //dhxh end ?>
+
 <?php echoUOJPageFooter() ?>

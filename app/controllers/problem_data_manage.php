@@ -103,47 +103,61 @@ EOD;
 	//添加配置文件
 	if($_POST['problem_settings_file_submit']=='submit'){
 
-		if($_POST['use_builtin_checker'] and $_POST['n_tests'] and $_POST['input_pre'] and $_POST['input_suf'] and $_POST['output_pre'] and $_POST['output_suf'] and $_POST['time_limit'] and $_POST['memory_limit']){
-				if(!is_dir("/var/svn/problem/{$problem['id']}/cur/{$problem['id']}/1/")){
-					mkdir("/var/svn/problem/{$problem['id']}/cur/{$problem['id']}/1/");
-				}
-				$set_filename="/var/svn/problem/{$problem['id']}/cur/{$problem['id']}/1/problem.conf";
-				$has_legacy=false;
-				if(file_exists($set_filename)){
-					$has_legacy=true;
-					unlink($set_filename);
-				}
-				$setfile = fopen($set_filename, "w");
-				fwrite($setfile, "use_builtin_judger on\n");
+		// if($_POST['use_builtin_checker'] and $_POST['n_tests'] and $_POST['input_pre'] and $_POST['input_suf'] and $_POST['output_pre'] and $_POST['output_suf'] and $_POST['time_limit'] and $_POST['memory_limit']){
+			if(!is_dir("/var/svn/problem/{$problem['id']}/cur/{$problem['id']}/1/")){
+				mkdir("/var/svn/problem/{$problem['id']}/cur/{$problem['id']}/1/");
+			}
+			$set_filename="/var/svn/problem/{$problem['id']}/cur/{$problem['id']}/1/problem.conf";
+			$has_legacy=false;
+			if(file_exists($set_filename)){
+				$has_legacy=true;
+				unlink($set_filename);
+			}
+			$setfile = fopen($set_filename, "w");
+			fwrite($setfile, "use_builtin_judger on\n");
+			if($_POST['use_builtin_checker'] != 'other') {
 				fwrite($setfile, "use_builtin_checker ".$_POST['use_builtin_checker']."\n");
-				fwrite($setfile, "n_tests ".$_POST['n_tests']."\n");
-				if($_POST['n_ex_tests']){
-					fwrite($setfile, "n_ex_tests ".$_POST['n_ex_tests']."\n");
-				}else{
-					fwrite($setfile, "n_ex_tests 0\n");
-				}
-				if($_POST['n_sample_tests']){
-					fwrite($setfile, "n_sample_tests ".$_POST['n_sample_tests']."\n");
-				}else{
-					fwrite($setfile, "n_sample_tests 0\n");
-				}
+			} else {
+				fwrite($setfile, "use_builtin_checker ".$_POST['other_checker_methods']."\n");
+			}
+			fwrite($setfile, "n_tests ".($_POST['n_tests']?$_POST['n_tests']:"10")."\n");
+			if($_POST['n_ex_tests']){
+				fwrite($setfile, "n_ex_tests ".$_POST['n_ex_tests']."\n");
+			}else{
+				fwrite($setfile, "n_ex_tests 0\n");
+			}
+			if($_POST['n_sample_tests']){
+				fwrite($setfile, "n_sample_tests ".$_POST['n_sample_tests']."\n");
+			}else{
+				fwrite($setfile, "n_sample_tests 0\n");
+			}
+			// AD1024 modification begin
+			fwrite($setfile, "input_pre ".($_POST['input_pre']?$_POST['input_pre']:"data")."\n");
+			fwrite($setfile, "input_suf ".($_POST['input_suf']?$_POST['input_suf']:"in")."\n");
+			fwrite($setfile, "output_pre ".($_POST['output_pre']?$_POST['output_pre']:($_POST['input_pre']?$_POST['input_pre']:"data"))."\n");
+			fwrite($setfile, "output_suf ".($_POST['output_suf']?$_POST['output_suf']:"out")."\n");
+			fwrite($setfile, "time_limit ".($_POST['time_limit']?$_POST['time_limit']:"1")."\n");
+			fwrite($setfile, "memory_limit ".($_POST['memory_limit']?$_POST['memory_limit']:"128")."\n");
+			/*
 				fwrite($setfile, "input_pre ".$_POST['input_pre']."\n");
 				fwrite($setfile, "input_suf ".$_POST['input_suf']."\n");
 				fwrite($setfile, "output_pre ".$_POST['output_pre']."\n");
 				fwrite($setfile, "output_suf ".$_POST['output_suf']."\n");
 				fwrite($setfile, "time_limit ".$_POST['time_limit']."\n");
 				fwrite($setfile, "memory_limit ".$_POST['memory_limit']."\n");
-				fclose($setfile);
-				if(!$has_legacy){
-					echo "<script>alert('添加成功！')</script>";
-				}else{
-					echo "<script>alert('替换成功!')</script>";
-				}
+			*/
+			// AD1024 modification ends
+			fclose($setfile);
+			if(!$has_legacy){
+				echo "<script>alert('添加成功！')</script>";
+			}else{
+				echo "<script>alert('替换成功!')</script>";
+			}
 
-		}else{
-			$errmsg = "添加配置文件失败，请检查是否所有输入框都已填写！";
-			becomeMsgPage('<div>' . $errmsg . '</div><a href="/problem/'.$problem['id'].'/manage/data">返回</a>');
-		}
+		// }else{
+		// 	$errmsg = "添加配置文件失败，请检查是否所有输入框都已填写！";
+		// 	becomeMsgPage('<div>' . $errmsg . '</div><a href="/problem/'.$problem['id'].'/manage/data">返回</a>');
+		// }
 	}
 
 
@@ -665,6 +679,9 @@ EOD
 	<li><a href="/problem/<?= $problem['id'] ?>/manage/statement" role="tab">编辑</a></li>
 	<li><a href="/problem/<?= $problem['id'] ?>/manage/managers" role="tab">管理者</a></li>
 	<li class="active"><a href="/problem/<?= $problem['id'] ?>/manage/data" role="tab">数据</a></li>
+	<?php //dhxh begin ?>
+	<li><a href="/problem/<?= $problem['id'] ?>/manage/solution" role="tab">题解管理</a></li>
+	<?php //dhxh end ?>
 	<li><a href="/problem/<?=$problem['id']?>" role="tab">返回</a></li>
 </ul>
 
@@ -781,68 +798,92 @@ EOD
       				<div class="modal-body">
         				<form class="form-horizontal" action="" method="post" role="form">
         					<div class="form-group">
-    							<label for="use_builtin_checker" class="col-sm-5 control-label">比对函数</label>
+    							<label for="use_builtin_checker" class="col-sm-5 control-label">比对函数  </label>
     							<div class="col-sm-7">
-								<select class="form-control" id="use_builtin_checker" name="use_builtin_checker">
-  									<option value="ncmp">单行整数序列</option>
-  									<option value="wcmp">单行字符串序列</option>
-  									<option value="fcmp">多行数据(忽略行末空格以及最后一行空行)</option>
-								</select>
+									<!-- <div class="form-group" id="radio-group" name="radio-group"> -->
+										<label class="radio">
+											<input type="radio" class="toggle" value="ncmp" name="use_builtin_checker" checked="checked"> 整数序列
+										</label>
+										<label class="radio">
+											<input type="radio" class="toggle" name="use_builtin_checker" value="wcmp"> 字符串序列
+										</label>
+										<label class="radio">
+											<input type="radio" class="toggle" name="use_builtin_checker" value="fcmp"> 全文对比(仅忽略最后一行空行)
+										</label>
+										<label class="radio">
+											<input type="radio" class="toggle" name="use_builtin_checker" value="other"> 其他
+											<select class="form-control" id="other_checker_methods" name="other_checker_methods">
+												<option value="yesno">比较单个YES或NO</option>
+												<option value="icmp">单个整数</option>
+												<option value="uncmp">(单行整数序列)比较无序64位整数序列，即排序后比较</option>
+												<option value="acmp">单个双精度浮点数 最大绝对误差为1.5e-6</option>
+												<option value="dcmp">单个双精度浮点数 最大绝对或相对误差为1.0e-6</option>
+												<option value="rcmp4">双精度浮点数序列 最大绝对或相对误差为1.0e-4</option>
+												<option value="rcmp6">双精度浮点数序列 最大绝对或相对误差为1.0e-6</option>
+												<option value="rncmp">双精度浮点数序列 最大绝对误差为1.5e-5</option>
+												<option value="hcmp">单个有符号大整数</option>
+												<option value="lcmp">逐行逐字符串进行全文比较 多个空白字符视为一个</option>
+												<option value="caseicmp">比较形如：Case [caseNumber]: [number]</option>
+												<option value="casencmp">比较形如：Case [caseNumber]: [number] [number]...[number]</option>
+												<option value="casewcmp">比较形如：Case [caseNumber]: [token] [token]...[token]</option>
+											</select>
+										</label>
+									<!-- </div> -->
       								<!--<input type="hidden" class="form-control" id="use_builtin_checker" name="use_builtin_checker" placeholder="比对函数">-->
     							</div>
   							</div>
   							<div class="form-group">
-    							<label for="n_tests" class="col-sm-5 control-label">n_tests</label>
+    							<label for="n_tests" class="col-sm-5 control-label">测试点个数</label>
     							<div class="col-sm-7">
-      								<input type="text" class="form-control" id="n_tests" name="n_tests" placeholder="数据点个数">
+      								<input type="text" class="form-control" id="n_tests" name="n_tests" placeholder="默认为10">
     							</div>
   							</div>
   							<div class="form-group">
-    							<label for="n_ex_tests" class="col-sm-5 control-label">n_ex_tests</label>
+    							<label for="n_ex_tests" class="col-sm-5 control-label">额外测试点数</label>
     							<div class="col-sm-7">
-      								<input type="text" class="form-control" id="n_ex_tests" name="n_ex_tests" placeholder="额外数据点个数">
+      								<input type="text" class="form-control" id="n_ex_tests" name="n_ex_tests" placeholder="可留空">
     							</div>
   							</div>
   							<div class="form-group">
-    							<label for="n_sample_tests" class="col-sm-5 control-label">n_sample_tests</label>
+    							<label for="n_sample_tests" class="col-sm-5 control-label">样例测试点数</label>
     							<div class="col-sm-7">
-      								<input type="text" class="form-control" id="n_sample_tests" name="n_sample_tests" placeholder="样例测试点个数">
+      								<input type="text" class="form-control" id="n_sample_tests" name="n_sample_tests" placeholder="可留空">
     							</div>
   							</div>
   							<div class="form-group">
-    							<label for="input_pre" class="col-sm-5 control-label">input_pre</label>
+    							<label for="input_pre" class="col-sm-5 control-label">输入文件名</label>
     							<div class="col-sm-7">
-      								<input type="text" class="form-control" id="input_pre" name="input_pre" placeholder="输入文件名称">
+      								<input type="text" class="form-control" id="input_pre" name="input_pre" placeholder="默认为data">
     							</div>
   							</div>
   							<div class="form-group">
-    							<label for="input_suf" class="col-sm-5 control-label">input_suf</label>
+    							<label for="input_suf" class="col-sm-5 control-label">输入文件名后缀</label>
     							<div class="col-sm-7">
-      								<input type="text" class="form-control" id="input_suf" name="input_suf" placeholder="输入文件后缀">
+      								<input type="text" class="form-control" id="input_suf" name="input_suf" placeholder="默认为 .in" value="in">
     							</div>
   							</div>
   							<div class="form-group">
-    							<label for="output_pre" class="col-sm-5 control-label">output_pre</label>
+    							<label for="output_pre" class="col-sm-5 control-label">输出文件名</label>
     							<div class="col-sm-7">
-      								<input type="text" class="form-control" id="output_pre" name="output_pre" placeholder="输出文件名称">
+      								<input type="text" class="form-control" id="output_pre" name="output_pre" placeholder="默认与输入文件名相同">
     							</div>
   							</div>
   							<div class="form-group">
-    							<label for="output_suf" class="col-sm-5 control-label">output_suf</label>
+    							<label for="output_suf" class="col-sm-5 control-label">输出文件名后缀</label>
     							<div class="col-sm-7">
-      								<input type="text" class="form-control" id="output_suf" name="output_suf" placeholder="输出文件后缀">
+      								<input type="text" class="form-control" id="output_suf" name="output_suf" placeholder="默认为out" value="out">
     							</div>
   							</div>
   							<div class="form-group">
-    							<label for="time_limit" class="col-sm-5 control-label">time_limit</label>
+    							<label for="time_limit" class="col-sm-5 control-label">时间限制</label>
     							<div class="col-sm-7">
-      								<input type="text" class="form-control" id="time_limit" name="time_limit" placeholder="时间限制（不能为小数！）">
+      								<input type="text" class="form-control" id="time_limit" name="time_limit" placeholder="不能为小数！默认为1">
     							</div>
   							</div>
   							<div class="form-group">
-    							<label for="memory_limit" class="col-sm-5 control-label">memory_limit</label>
+    							<label for="memory_limit" class="col-sm-5 control-label">内存限制</label>
     							<div class="col-sm-7">
-      								<input type="text" class="form-control" id="memory_limit" name="memory_limit" placeholder="内存限制">
+      								<input type="text" class="form-control" id="memory_limit" name="memory_limit" placeholder="默认为128">
     							</div>
   							</div>
 							<input type="hidden" name="problem_settings_file_submit" value="submit">

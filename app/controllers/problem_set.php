@@ -20,7 +20,7 @@
 
 			// AD1024 Start
 			mysql_query("update problems set hackable = 0 where id = {$id}");
-			$__config = array('view_details_type'=>'ALL_AFTER_AC','view_all_details_type'=>'ALL','view_content_type'=>'ALL_AFTER_AC');
+			$__config = array('view_details_type'=>'ALL','view_all_details_type'=>'ALL','view_content_type'=>'SELF');
 			$__esc_conf = DB::escape(json_encode($__config));
 			mysql_query("update problems set extra_config = '$__esc_conf' where id = {$id}");
 			// AD1024 End

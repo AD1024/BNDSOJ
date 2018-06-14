@@ -24,6 +24,10 @@ return [
 	'password' => 'Password',
 	'new password' => 'New password',
 	'email' => 'Email',
+	//dhxh begin
+	'realname' => 'Realname',
+	'homework' => 'Homework',
+	//dhxh end
 	'QQ' => 'QQ',
 	'sex' => 'Sex',
 	'motto' => 'Motto',
@@ -58,6 +62,9 @@ return [
 	'change avatar help' => 'Do you want to change your avatar? Please see <a href="/faq">Help</a>',
 	'enter your username' => 'Enter your username',
 	'enter your email' => 'Enter your email',
+	//dhxh begin
+	'enter your realname' => 'Enter your realname',
+	//dhxh end
 	'enter your password' => 'Enter your password',
 	're-enter your password' => 'Re-enter your password',
 	'enter your new password' => 'Enter your new password',

@@ -38,9 +38,9 @@
 		<meta name="robots" content="noindex, nofollow" />
 		<?php endif ?>
 		<!---
-		<title><?= isset($PageTitle) ? $PageTitle : 'BNDSOJ' ?> - <?= $PageMainTitle ?></title>
+		<title><?= isset($PageTitle) ? $PageTitle : 'BNDSOJ for Homework' ?> - <?= $PageMainTitle ?></title>
 		--->
-		<title><?= isset($PageTitle) ? 'BNDSOJ' : 'BNDSOJ' ?> - <?= $PageMainTitle ?></title>
+		<title><?= isset($PageTitle) ? 'BNDSOJ for Homework' : 'BNDSOJ for Homework' ?> - <?= $PageMainTitle ?></title>
 		<script type="text/javascript">uojHome = '<?= HTML::url('/') ?>'</script>
 
 		<!-- Bootstrap core CSS -->
@@ -80,7 +80,8 @@
 		<?= HTML::js_src('/js/color-converter.min.js') ?>
 		
 		<!-- uoj -->
-		<?= HTML::js_src('/js/uoj.js?v=2016.8.15') ?>
+		<?= HTML::js_src('/js/uoj.js?v=2017.2.26') ?>
+		<?php //edit by dhxh ('/js/uoj.js?v=2016.8.15') ?>
 		
 		<!-- LAB -->
 		<?= HTML::js_src('/js/LAB.min.js') ?>
@@ -197,6 +198,15 @@
 		<script type="text/javascript">$(document).ready(function(){sh_highlightDocument()})</script>
 		<?php endif ?>
 		
+		<?php //dhxh begin ?>
+		<?php if (isset($REQUIRE_LIB['dtp'])): ?>
+		<!-- bootstrap-datetimepicker -->
+		<?= HTML::css_link('/css/datetimepicker/bootstrap-datetimepicker.min.css') ?>
+		<?= HTML::js_src('/js/datetimepicker/bootstrap-datetimepicker.min.js') ?>
+		<?= HTML::js_src('/js/datetimepicker/bootstrap-datetimepicker.zh-CN.js') ?>
+		<?php endif ?>
+		<?php //dhxh end ?>
+		
 		<?php if (isset($REQUIRE_LIB['ckeditor'])): ?>
 		<!-- ckeditor -->
 		<?= HTML::js_src('/js/ckeditor/ckeditor.js') ?>
@@ -237,9 +247,9 @@
 							<li role="presentation"><a href="<?= HTML::url('/user/system-msg') ?>"><?= UOJLocale::get('system message') ?>&nbsp;&nbsp;<?= $new_system_msg_num_html ?></a></li>
 							<?php if (isSuperUser(Auth::user())): ?>
 								<li role="presentation"><a href="<?= HTML::url('/super-manage') ?>"><?= UOJLocale::get('system manage') ?></a></li>
-								<!--- AD1024 Begin --->
+								<!-- AD1024 Begin -->
 								<li role="presentation"><a href="/homework/management"><?=UOJLocale::get('homework_management')?></a></li>
-								<!--- AD1024 End --->
+								<!-- AD1024 End -->
 							<?php endif ?>
 						</ul>
 					</li>
@@ -249,8 +259,8 @@
 					<li role="presentation"><a href="<?= HTML::url('/register') ?>"><?= UOJLocale::get('register') ?></a></li>
 				<?php endif ?>
 				</ul>
-				<h1 class="hidden-xs"><a href="<?= HTML::url('/') ?>"><img src="<?= HTML::url('/pictures/BNDSOJ-small.png') ?>" alt="UOJ Logo" class="img-rounded" style="width:39px; height:39px;" /></a> <?= $PageMainTitle ?></h1>
-				<h1 class="visible-xs"><?= $PageMainTitleOnSmall ?></h1>
+				<h1 class="hidden-xs"><a href="<?= HTML::url('/') ?>"><img src="<?= HTML::url('/pictures/BNDSOJ-small.png') ?>" alt="UOJ Logo" class="img-rounded" style="width:39px; height:39px;" /></a> <?= $PageMainTitle ?> <small>for Homework</small></h1>
+				<h1 class="visible-xs"><?= $PageMainTitleOnSmall ?><small>for Homework</small></h1>
 			</div>
 			
 			<?php uojIncludeView($PageNav) ?>

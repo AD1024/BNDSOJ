@@ -14,16 +14,20 @@ return [
 	'local submissions' => '本地提交记录',
 	'remote submissions' => '远程提交记录',
 	'hacks' => 'Hack!',
-	'blogs' => '博客',
+	'blogs' => '资料',
 	'announcements' => '公告',
 	'all the announcements' => '所有公告……',
 	'help' => '帮助',
 	'search' => '搜索',
-	'top rated' => '比赛排行榜',
+	'top rated' => '排行榜',
 	'username' => '用户名',
 	'password' => '密码',
 	'new password' => '新密码',
 	'email' => 'Email',
+	//dhxh begin
+	'realname' => '真实姓名',
+	'homework' => '作业',
+	//dhxh end
 	'QQ' => 'QQ',
 	'sex' => '性别',
 	'motto' => '格言',
@@ -58,6 +62,9 @@ return [
 	'change avatar help' => '想改头像？见<a href="/faq">帮助</a>',
 	'enter your username' => '输入用户名',
 	'enter your email' => '输入Email',
+	//dhxh begin
+	'enter your realname' => '输入真实姓名',
+	//dhxh end
 	'enter your password' => '输入密码',
 	're-enter your password' => '重新输入密码',
 	'enter your new password' => '输入新密码',

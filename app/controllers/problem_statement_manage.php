@@ -53,6 +53,7 @@
 	<li><a href="/problem/<?= $problem['id'] ?>/manage/managers" role="tab">管理者</a></li>
 	<li><a href="/problem/<?= $problem['id'] ?>/manage/data" role="tab">数据</a></li>
 	<?php //dhxh begin ?>
+	<li><a href="/problem/<?= $problem['id'] ?>/manage/solution" role="tab">题解管理</a></li>
 	<!--<li><a href="/problem/<?= $problem['id'] ?>/manage/imgupload" role="tab">图片上传</a></li>-->
 	<?php //dhxh end ?>
 	<?php// AD1024 Modify on 2016.10.20 ?>

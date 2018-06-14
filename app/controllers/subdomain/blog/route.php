@@ -17,5 +17,9 @@ Route::group([
 		Route::any('/blog/(?:{id}|new)/write', '/subdomain/blog/blog_write.php');
 		Route::any('/slide/(?:{id}|new)/write', '/subdomain/blog/slide_write.php');
 		Route::any('/blog/{id}/delete', '/subdomain/blog/blog_delete.php');
+
+		//dhxh begin
+		Route::any('/blog/imgupload', '/subdomain/blog/blog_img_upload.php');
+		//dhxh end
 	}
 );

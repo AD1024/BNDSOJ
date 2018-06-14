@@ -32,6 +32,18 @@
 		$esc_email = mysql_real_escape_string($email);
 		DB::update("update user_info set email = '$esc_email' where username = '{$myUser['username']}'");
 
+		//dhxh begin
+
+		$realname = $_POST['realname'];
+		if (!validateMotto($realname))
+		{
+			return "失败：无效真实姓名。";
+		}
+		$esc_realname = mysql_real_escape_string($realname);
+		DB::update("update user_info set realname = '$esc_realname' where username = '{$myUser['username']}'");
+
+		//dhxh end
+
 		if ($_POST['Qtag'])
 		{
 			$qq = $_POST['qq'];
@@ -93,6 +105,13 @@
 			<span class="help-block" id="help-email"></span>
 		</div>
 	</div>
+	<div id="div-realname" class="form-group">
+		<label for="input-realname" class="col-sm-2 control-label"><?= UOJLocale::get('realname') ?></label>
+		<div class="col-sm-3">
+			<input type="text" class="form-control" name="realname" id="input-realname" value="<?=$myUser['realname']?>" placeholder="<?= UOJLocale::get('enter your realname') ?>" maxlength="50" />
+			<span class="help-block" id="help-realname"></span>
+		</div>
+	</div>
 	<div id="div-qq" class="form-group">
 		<label for="input-qq" class="col-sm-2 control-label"><?= UOJLocale::get('QQ') ?></label>
 		<div class="col-sm-3">
@@ -151,6 +170,7 @@
 			ptag     : $('#input-password').val().length,
 			Qtag     : $('#input-qq').val().length,
 			email    : $('#input-email').val(),
+			realname : $('#input-realname').val(),
 			password : md5($('#input-password').val(), "<?= getPasswordClientSalt() ?>"),
 			old_password : md5($('#input-old_password').val(), "<?= getPasswordClientSalt() ?>"),
 			qq       : $('#input-qq').val(),

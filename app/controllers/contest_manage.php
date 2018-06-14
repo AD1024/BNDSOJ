@@ -176,6 +176,10 @@
 	$time_form->runAtServer();
 	$managers_form->runAtServer();
 	$problems_form->runAtServer();
+	
+	//dhxh begin
+	$REQUIRE_LIB['dtp'] = '';
+	//dhxh end
 ?>
 <?php echoUOJPageHeader(HTML::stripTags($contest['name']) . ' - 比赛管理') ?>
 <h1 class="page-header" align="center"><?=$contest['name']?> 管理</h1>
@@ -259,4 +263,21 @@
 	</div>
 	<?php endif ?>
 </div>
+
+<?php //dhxh begin ?>
+<script>
+	$('.form_datetime').datetimepicker({
+		language:  'zh-CN',
+		weekStart: 1,
+		todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		forceParse: 0,
+		showMeridian: 1
+	});
+	$("#input-start_time").datetimepicker({format: 'yyyy-mm-dd hh:ii'});
+</script>
+<?php //dhxh end ?>
+
 <?php echoUOJPageFooter() ?>

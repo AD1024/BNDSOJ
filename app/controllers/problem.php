@@ -12,6 +12,19 @@
 	
 	$problem_content = queryProblemContent($problem['id']);
 	
+	$problem_has_ac = DB::selectCount("select count(*) from best_ac_submissions where submitter = '".$myUser['username']."' and problem_id = ".$problem['id'].";") > 0;
+
+	//dhxh begin
+	function queryProblemSolution($id) {
+		if(DB::selectCount("select * from problems_solutions where problem_id='$id'") == 0){
+			DB::insert("insert into problems_solutions (problem_id, is_hidden) values (".$id.", 1)");
+		}
+		return mysql_fetch_array(mysql_query("select * from problems_solutions where problem_id='$id'"), MYSQL_ASSOC);
+	}
+	
+	$problem_solution_content = queryProblemSolution($problem['id']);
+	//dhxh end
+	
 	$contest = validateUInt($_GET['contest_id']) ? queryContest($_GET['contest_id']) : null;
 	if ($contest != null) {
 		genMoreContestInfo($contest);
@@ -45,6 +58,12 @@
 			become404Page();
 		}
 	}
+	
+	//dhxh begin
+	if($ban_in_contest){
+		become404Page();
+	}
+	//dhxh end
 
 	$submission_requirement = json_decode($problem['submission_requirement'], true);
 	$problem_extra_config = getProblemExtraConfig($problem);
@@ -239,6 +258,11 @@ $('#contest-countdown').countdown(<?= $contest['end_time']->getTimestamp() - UOJ
 	<?php if ($custom_test_requirement): ?>
 	<li><a href="#tab-custom-test" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-console"></span> <?= UOJLocale::get('problems::custom test') ?></a></li>
 	<?php endif ?>
+	<?php //dhxh begin ?>
+	<?php if ((!$contest and ($problem_solution_content['is_hidden'] == 0 or $problem_has_ac)) or hasProblemPermission($myUser, $problem)): ?>
+	<li><a href="#tab-solution" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-list"></span> <?= UOJLocale::get('problems::solution') ?></a></li>
+	<?php endif ?>
+	<?php // dhxh end ?>
 	<?php if (hasProblemPermission($myUser, $problem)): ?>
 	<li><a href="/problem/<?= $problem['id'] ?>/manage/statement" role="tab"><?= UOJLocale::get('problems::manage') ?></a></li>
 	<?php endif ?>
@@ -265,5 +289,12 @@ $('#contest-countdown').countdown(<?= $contest['end_time']->getTimestamp() - UOJ
 		<?php $custom_test_form->printHTML(); ?>
 	</div>
 	<?php endif ?>
+	<?php //dhxh begin ?>
+	<?php if ((!$contest and ($problem_solution_content['is_hidden'] == 0 or $problem_has_ac)) or hasProblemPermission($myUser, $problem)): ?>
+	<div class="tab-pane" id="tab-solution">
+		<article class="top-buffer-md"><?= $problem_solution_content['solution'] ?></article>
+	</div>
+	<?php endif ?>
+	<?php // dhxh end ?>
 </div>
 <?php echoUOJPageFooter() ?>

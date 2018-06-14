@@ -46,7 +46,7 @@
 			}else{
 				$sql = mysql_query("select * from user_info where ".$cond." order by username asc;");
 				while($info = mysql_fetch_array($sql)){
-					$uhtml = '<span class="uoj-username" data-rating="'.$info['rating'].'">'.$info['username'].'</span>';
+					$uhtml = getUserLink($info['username']);
 
 					$cnt++;
 		?>

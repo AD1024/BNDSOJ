@@ -44,9 +44,9 @@
 			}else{
 				$sql = mysql_query("select * from user_group_map where ".$cond.";");
 				while($info = mysql_fetch_array($sql)){
-					$sqlu = mysql_query("select * from user_info where username ='".$info['username']."';");
-					$uinfo = mysql_fetch_array($sqlu);
-					$uhtml = '<span class="uoj-username" data-rating="'.$uinfo['rating'].'">'.$info['username'].'</span>';
+					//$sqlu = mysql_query("select * from user_info where username ='".$info['username']."';");
+					//$uinfo = mysql_fetch_array($sqlu);
+					$uhtml = getUserLink($info['username']);
 					$cnt++;
 		?>
 

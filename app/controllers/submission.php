@@ -102,6 +102,11 @@
 	$should_show_all_details = hasViewPermission($problem_extra_config['view_all_details_type'], $myUser, $problem, $submission);
 	$should_show_details = hasViewPermission($problem_extra_config['view_details_type'], $myUser, $problem, $submission);
 	$should_show_details_to_me = isSuperUser($myUser);
+	if(isSuperUser($myUser)) {
+		$should_show_content = true;
+		$should_show_all_details = true;
+		$should_show_details = true;
+	}
 	if (explode(', ', $submission['status'])[0] != 'Judged') {
 		$should_show_all_details = false;
 	}

@@ -25,7 +25,7 @@ class Auth {
 				DB::update("update user_info set remember_token = '$remember_token' where username = '$username'");
 			}
 
-			$expire = time() + 60 * 60 * 24 * 365 * 10;
+			$expire = time() + 60 * 60 * 6;
 			Cookie::safeSet('uoj_username', $username, $expire, '/', array('httponly' => true));
 			Cookie::safeSet('uoj_remember_token', $remember_token, $expire, '/', array('httponly' => true));
 		}

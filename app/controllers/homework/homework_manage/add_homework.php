@@ -1,16 +1,15 @@
 <?php
-	requirePHPLib('form');
-	requirePHPLib('judger');
-	echoUOJPageHeader();
-	if(!isSuperUser(Auth::user())){
-		become403Page();
-		exit();
+	if($myUser == null || !isSuperUser($myUser)){
+		Become404Page();
+	}
+	
+	if($_GET['title'] !== "" and $_GET['content'] !== ""){
+		$title = htmlspecialchars(DB::escape($_GET['title']));
+		$content = htmlspecialchars(DB::escape($_GET['content']));
+		$duetime = date("Y-m-d h:i:s", time() + 86400);
+		DB::query("insert into homework_index(title, msg, due) values('".$title."', '".$content."', '".$duetime."');");
+		echo 'OK';
+	}else{
+		echo "Error!";
 	}
 ?>
-<h1 class="page-header" align="center"><?=UOJLocale::get('homework_management')?></h1>
-<ul class="nav nav-tabs" role="tablist">
-	<li class="active"><a href="/homework/add" role="tab"><?=UOJLocale::get('add_new_homework')?></a></li>
-	<li><a href="/homework/user_manage" role="tab"><?=UOJLocale::get('user_group_manage')?></a></li>
-</ul>
-
-<?php echoUOJPageFooter();?>

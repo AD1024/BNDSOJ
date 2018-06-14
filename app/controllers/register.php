@@ -1,6 +1,13 @@
 <?php
-	//become404page();
-	//exit();
+	$sql = mysql_query("select * from register_status;");
+	$info = mysql_fetch_array($sql);
+	$rstatus = $info['status'];
+
+	if(intval($rstatus) === 0){
+		become403page();
+		//exit();
+	}
+	
 	function handleRegisterPost() {
 		if (!crsf_check()) {
 			return '页面已过期';

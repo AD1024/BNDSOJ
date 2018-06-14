@@ -103,7 +103,8 @@ function queryBlogComment($id) {
 	return mysql_fetch_array(mysql_query("select * from blogs_comments where id='$id'"), MYSQL_ASSOC);
 }
 
-function isProblemVisibleToUser($problem, $user) {
+//dhxh begin
+/*function isProblemVisibleToUser($problem, $user) {
 	return !$problem['is_hidden'] || hasProblemPermission($user, $problem);
 }
 function isContestProblemVisibleToUser($problem, $contest, $user) {
@@ -136,7 +137,48 @@ function isHackVisibleToUser($hack, $problem, $user) {
 	} else {
 		return hasProblemPermission($user, $problem);
 	}
+}*/
+
+function isProblemVisibleToUser($problem, $user) {
+	$cnt = DB::selectCount("select count(*) from contests where status = 'finished' and (select count(*) from contests_problems where contests_problems.problem_id = ".$problem['id']." and contests_problems.contest_id = contests.id) > 0 and (select count(*) from contests_registrants where username = '${user['username']}' and contests_registrants.contest_id = contests.id) > 0;");
+	if($cnt > 0){
+		return true;
+	}
+	return !$problem['is_hidden'] || hasProblemPermission($user, $problem);
 }
+function isContestProblemVisibleToUser($problem, $contest, $user) {
+	if (isProblemVisibleToUser($problem, $user)) {
+		return true;
+	}
+	/*if ($contest['cur_progress'] >= CONTEST_PENDING_FINAL_TEST) {
+		return true;
+	}*/
+	if ($contest['cur_progress'] == CONTEST_NOT_STARTED) {
+		return false;
+	}
+	return hasRegistered($user, $contest);
+}
+
+function isSubmissionVisibleToUser($submission, $problem, $user) {
+	if (isSuperUser($user)) {
+		return true;
+	} else if (!$submission['is_hidden']) {
+		return true;
+	} else {
+		return isProblemVisibleToUser($user, $problem);
+	}
+}
+function isHackVisibleToUser($hack, $problem, $user) {
+	if (isSuperUser($user)) {
+		return true;
+	} elseif (!$hack['is_hidden']) {
+		return true;
+	} else {
+		return isProblemVisibleToUser($user, $problem);
+	}
+}
+
+//dhxh end
 
 function isSubmissionFullVisibleToUser($submission, $contest, $problem, $user) {
 	if (isSuperUser($user)) {

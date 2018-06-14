@@ -162,9 +162,9 @@
 			}
 		}*/
 
-		$sqlu = mysql_query("select * from user_info where username ='".$info['submitter']."';");
-		$uinfo = mysql_fetch_array($sqlu);
-		$uhtml = '<span class="uoj-username" data-rating="'.$uinfo['rating'].'">'.$info['submitter'].'</span>';
+		//$sqlu = mysql_query("select * from user_info where username ='".$info['submitter']."';");
+		//$uinfo = mysql_fetch_array($sqlu);
+		$uhtml = getUserLink($info['submitter']);
 		if($info['result'] === 'Accepted'){
 			$rhtml = '<a href="/remoteoj/submission/'.$info['id'].'" style="color: rgb(0, 204, 0);">'.$info['result'].'</a>';
 		}else if($info['result'] === 'Waiting'){

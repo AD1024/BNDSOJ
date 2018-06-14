@@ -87,4 +87,73 @@
 <a href="http://uoj.ac/blog/7">这玩意儿怎么用？</a>
 </div>
 <?php $blog_editor->printHTML() ?>
+
+<?php //dhxh begin ?>
+<div class="modal fade" id="UploadImgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    			<h4 class="modal-title" id="myModalLabel">上传数据</h4>
+			</div>
+			<div class="modal-body">
+				<form id="imguploadform" action="" method="post" enctype="multipart/form-data" role="form">
+					<div class="form-group">
+						<label for="exampleInputFile">文件</label>
+						<input type="file" name="problem_img_file" id="problem_img_file">
+						<p class="help-block">请上传.jpg/.jpeg/.gif/.png文件</p>
+					</div>
+					<input type="hidden" name="problem_img_file_submit" value="submit">
+					<button id="uploadimgbtn" type="submit" class="btn btn-success">上传</button>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script language="javascript">
+
+function add_around(sl, sr) {
+	window.codee.replaceSelection(sl + window.codee.getSelection() + sr);
+}
+
+function imgupload(){
+	var imgupload_url="/blog/imgupload";
+	$.ajax({
+    	url: imgupload_url,
+    	type: 'POST',
+    	cache: false,
+    	data: new FormData($('#imguploadform')[0]),
+    	processData: false,
+    	contentType: false
+	}).success(function(res) {
+		if(res.substr(0,2) == "ok"){
+			alert("上传成功！");
+			$('#UploadImgModal').modal('hide');
+			window.codee.focus();
+			addcode="![]("+ res.substring(3) +")";
+			add_around("", addcode);
+		}else{
+			alert(res);
+		}
+			
+	}).fail(function(res) {
+		alert("上传失败，请重新上传！");
+	});
+	return false;
+}
+
+$("#uploadimgbtn").click(function() {
+	window.codee.focus();
+	imgupload();
+	return false;
+});
+	
+</script>
+
+<?php //dhxh end?>
+
 <?php echoUOJPageFooter() ?>

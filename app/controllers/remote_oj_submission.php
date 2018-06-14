@@ -24,7 +24,18 @@
 	}else{
 		$code_show = true;
 	}
-
+	
+	if(isSuperUser($myUser)){
+		$code_show = true;
+	}
+	
+	if(isSuperUser($myUser) or ($info['status'] === 'failed' and $myUser['username'] === $info['submitter'])){
+		
+		if($_POST['rejudge'] === 'true'){
+			mysql_query("update remote_oj_submissions set status = 'w', result = 'Waiting' where id =".$submission['id'].";");
+			header("location: ".$_SERVER['REQUEST_URI']);
+		}
+	}
 
 	/*if($info['status'] === "w"){
 		$oj_name = $info['oj_name'];
@@ -77,9 +88,9 @@
 
 <?php
 
-		$sqlu = mysql_query("select * from user_info where username ='".$info['submitter']."';");
-		$uinfo = mysql_fetch_array($sqlu);
-		$uhtml = '<span class="uoj-username" data-rating="'.$uinfo['rating'].'">'.$info['submitter'].'</span>';
+		//$sqlu = mysql_query("select * from user_info where username ='".$info['submitter']."';");
+		//$uinfo = mysql_fetch_array($sqlu);
+		$uhtml = getUserLink($info['submitter']);
 		if($info['result'] === 'Accepted'){
 			$rhtml = '<a href="/remoteoj/submission/'.$info['id'].'" style="color: rgb(0, 204, 0);">'.$info['result'].'</a>';
 		}else{
@@ -118,5 +129,16 @@
 <?php
 	}
 ?>
+
+<?php if(isSuperUser($myUser) or ($info['status'] === 'failed' and $myUser['username'] === $info['submitter'])): ?>
+
+<form action="" method="post" class="form-horizontal" id="form-rejudge">
+	<input type="hidden" name="rejudge" value="true" />
+	<div class="text-right">
+		<button type="submit" id="button-submit-rejudge" name="submit-rejudge" value="rejudge" class="btn btn-primary">重新测试</button>
+	</div>
+</form>
+
+<?php endif ?>
 
 <?php echoUOJPageFooter() ?>

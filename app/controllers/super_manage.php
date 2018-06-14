@@ -260,6 +260,14 @@ EOD;
 		'tmp-user' => array(
 			'name' => '临时用户管理',
 			'url' => '/super-manage/tmp-user'
+		),
+		'user-password-reset' => array(
+			'name' => '用户密码重置',
+			'url' => '/super-manage/user-password-reset'
+		),
+		'register' => array(
+			'name' => '注册开关',
+			'url' => '/super-manage/register'
 		)
 	);
 	

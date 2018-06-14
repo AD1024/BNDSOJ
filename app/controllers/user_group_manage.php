@@ -40,6 +40,14 @@
 		'tmp-user' => array(
 			'name' => '临时用户管理',
 			'url' => '/super-manage/tmp-user'
+		),
+		'user-password-reset' => array(
+			'name' => '用户密码重置',
+			'url' => '/super-manage/user-password-reset'
+		),
+		'register' => array(
+			'name' => '注册开关',
+			'url' => '/super-manage/register'
 		)
 	);
 
@@ -160,7 +168,7 @@
 				addgroup_groupname.value = "";
 				$('#AddGroupModal').modal('hide');
 				msg_content.innerHTML = "<p class='text-success'>添加成功！</p>";
-				reflash();
+				reflash(1);
 				$('#MsgModal').modal('show');
 			}else{
 				alert(msg);
@@ -180,7 +188,7 @@
 				addgroup_groupname.value = "";
 				$('#DeleteGroupModal').modal('hide');
 				msg_content.innerHTML = "<p class='text-success'>删除成功！</p>";
-				reflash();
+				reflash(1);
 				$('#MsgModal').modal('show');
 			}else{
 				alert(msg);
@@ -205,8 +213,8 @@
 		$('#DeleteGroupModal').modal('show');
 	}
 
-	function reflash(){
-		$.get("/ajax/user-group-list", function(data){
+	function reflash(page_id){
+		$.get("/ajax/user-group-list?page=" + page_id, function(data){
 			$('#user_group_list').html(data);
 		});
 	}

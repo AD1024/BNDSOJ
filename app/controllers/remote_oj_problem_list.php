@@ -47,7 +47,7 @@
 	if($_GET['ojname']){
 		$oj_name = $_GET['ojname'];
 	}else{
-		$oj_name = "poj";
+		$oj_name = "hdu";
 	}
 
 	$roj_cur_tab = $oj_name;
