@@ -49,8 +49,8 @@
 			}
 			echo '#', $problem['id'], '</td>';
 			// AD1024 begin
-			if(isSuperUser($myUser)) {
-				echo '<td class="text-left">', '<a href="/problem/', $problem['id'], '">', $problem['title'], '</a>'.('<strong>'.($problem['is_hidden']?"  (未公开)":"").'</strong>');
+			if(isSuperUser($myUser) && $problem['is_hidden']) {
+				echo '<td class="text-left warning">', '<a href="/problem/', $problem['id'], '">', $problem['title'], '</a>   '.('<span class="glyphicon glyphicon-sunglasses " aria-hidden="true"></span>');
 			} else {
 				echo '<td class="text-left">', '<a href="/problem/', $problem['id'], '">', $problem['title'], '</a>';
 			}
