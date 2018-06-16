@@ -121,7 +121,7 @@ function add_around(sl, sr) {
 }
 
 function imgupload(){
-	var imgupload_url="/blog/imgupload";
+	var imgupload_url="/blog/<?=UOJContext::user()['username']?>/blog/imgupload";
 	$.ajax({
     	url: imgupload_url,
     	type: 'POST',

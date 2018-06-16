@@ -162,19 +162,19 @@ function isContestProblemVisibleToUser($problem, $contest, $user) {
 function isSubmissionVisibleToUser($submission, $problem, $user) {
 	if (isSuperUser($user)) {
 		return true;
-	} else if (!$submission['is_hidden']) {
-		return true;
+	/*} else if (!$submission['is_hidden']) {
+		return true;*/
 	} else {
-		return isProblemVisibleToUser($user, $problem);
+		return isProblemVisibleToUser($problem, $user);
 	}
 }
 function isHackVisibleToUser($hack, $problem, $user) {
 	if (isSuperUser($user)) {
 		return true;
-	} elseif (!$hack['is_hidden']) {
-		return true;
+	/*} elseif (!$hack['is_hidden']) {
+		return true;*/
 	} else {
-		return isProblemVisibleToUser($user, $problem);
+		return isProblemVisibleToUser($problem, $user);
 	}
 }
 

@@ -67,7 +67,7 @@ class UOJContext {
 			become404Page();
 		}
 		if ($_GET['blog_username'] !== blog_name_encode(self::$data['user']['username'])) {
-			permanentlyRedirectTo(HTML::blog_url(self::$data['user']['username'], '/'));
+			// permanentlyRedirectTo(HTML::blog_url(self::$data['user']['username'], '/'));
 		}
 		self::$data['type'] = 'blog';
 	}

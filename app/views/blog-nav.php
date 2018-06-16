@@ -7,12 +7,12 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="/"><?= UOJContext::userid() ?></a>
+			<a class="navbar-brand" href="/blog/<?=UOJContext::user()['username']?>"><?= UOJContext::userid() ?></a>
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
-				<li><a href="/archive">日志</a></li>
-				<li><a href="/aboutme">关于我</a></li>
+				<li><a href="/blog/<?=UOJContext::user()['username']?>/archive">日志</a></li>
+				<li><a href="/blog/<?=UOJContext::user()['username']?>/aboutme">关于我</a></li>
 				<li><a href="<?= HTML::url('/') ?>">BNDSOJ</a></li>
 			</ul>
 		</div><!--/.nav-collapse -->

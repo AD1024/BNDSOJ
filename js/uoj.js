@@ -154,12 +154,6 @@ function getUserLink(username, rating, addSymbol) {
 	//dhxh begin
 	var tmp = username.split("(");
 	var userlink = tmp[0];
-	if(userlink =='sekong_qi') {
-		return '<a class="uoj-username" href="' + uojHome + '/user/profile/' + userlink + '" style="color:white' + '">' + text + '</a>';
-	}
-	if(userlink == 'AloNE') {
-		return '<a class="uoj-username" href="' + uojHome + '/user/profile/' + userlink + '" style="color:rgb(123,104,238)' + '">' + text + '</a>';
-	}
 	return '<a class="uoj-username" href="' + uojHome + '/user/profile/' + userlink + '" style="color:' + getColOfRating(rating) + '">' + text + '</a>';
 	//return '<a class="uoj-username" href="' + uojHome + '/user/profile/' + username + '" style="color:' + getColOfRating(rating) + '">' + text + '</a>';
 	//dhxh end

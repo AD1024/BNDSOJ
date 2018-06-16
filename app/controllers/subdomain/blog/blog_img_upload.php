@@ -3,7 +3,6 @@
 Add by dhxh
 */
 requirePHPLib('form');
-	
 	if (!UOJContext::hasBlogPermission()) {
 		become403Page();
 	}

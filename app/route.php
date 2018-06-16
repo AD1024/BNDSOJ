@@ -6,9 +6,13 @@ Route::pattern('contest_id', '[1-9][0-9]{0,9}');
 Route::pattern('tab', '\S{1,20}');
 Route::pattern('rand_str_id', '[0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ]{20}');
 Route::pattern('upgrade_name', '[a-zA-Z0-9_]{1,50}');
+Route::pattern('blog_username', '[a-zA-Z0-9_\-]{1,20}');
 
 Route::group([
-		'domain' => UOJConfig::$data['web']['main']['host']."|127.0.0.1"
+		'domain' => UOJConfig::$data['web']['main']['host']."|127.0.0.1"/*,
+		'onload' => function() {
+			UOJContext::setupBlog();
+		}*/
 	], function() {
 		Route::any('/', '/index.php');
 		Route::any('/problems', '/problem_set.php');
@@ -18,6 +22,25 @@ Route::group([
 		Route::any('/problem/{id}/manage/statement', '/problem_statement_manage.php');
 		Route::any('/problem/{id}/manage/managers', '/problem_managers_manage.php');
 		Route::any('/problem/{id}/manage/data', '/problem_data_manage.php');
+
+		// AD1024 begin [redirect blog]
+		/*
+		Route::any('/blog/{blog_username}', '/subdomain/blog/index.php');
+		Route::any('/blog/{blog_username}/archive', '/subdomain/blog/archive.php');
+		Route::any('/blog/{blog_username}/aboutme', '/subdomain/blog/aboutme.php');
+		Route::any('/blog/{blog_username}/click-zan', '/click_zan.php');
+		Route::any('/blog/{blog_username}/blog/{id}', '/subdomain/blog/blog.php');
+		Route::any('/blog/{blog_username}/slide/{id}', '/subdomain/blog/slide.php');
+		Route::any('/blog/{blog_username}/blog/(?:{id}|new)/write', '/subdomain/blog/blog_write.php');
+		Route::any('/blog/{blog_username}/slide/(?:{id}|new)/write', '/subdomain/blog/slide_write.php');
+		Route::any('/blog/{blog_username}/{id}/delete', '/subdomain/blog/blog_delete.php');
+
+		//dhxh begin
+		Route::any('/blog/imgupload', '/subdomain/blog/blog_img_upload.php');
+		//dhxh end
+
+		// AD1024 end
+		*/
 
 		//dhxh begin
 		Route::any('/problems/basic', '/problem_set.php?tab=basic');
@@ -117,6 +140,28 @@ Route::group([
 		Route::any('/upgrade/up/{upgrade_name}', '/upgrade.php?type=up');
 		Route::any('/upgrade/down/{upgrade_name}', '/upgrade.php?type=down');
 		Route::any('/upgrade/latest', '/upgrade.php?type=latest');
+	}
+);
+
+Route::group([
+		'domain' => UOJConfig::$data['web']['main']['host'], 
+		'onload' => function() {
+			UOJContext::setupBlog();
+		}
+	], function() {
+		Route::any('/blog/{blog_username}', '/subdomain/blog/index.php');
+		Route::any('/blog/{blog_username}/archive', '/subdomain/blog/archive.php');
+		Route::any('/blog/{blog_username}/aboutme', '/subdomain/blog/aboutme.php');
+		Route::any('/blog/{blog_username}/click-zan', '/click_zan.php');
+		Route::any('/blog/{blog_username}/blog/{id}', '/subdomain/blog/blog.php');
+		Route::any('/blog/{blog_username}/slide/{id}', '/subdomain/blog/slide.php');
+		Route::any('/blog/{blog_username}/blog/(?:{id}|new)/write', '/subdomain/blog/blog_write.php');
+		Route::any('/blog/{blog_username}/slide/(?:{id}|new)/write', '/subdomain/blog/slide_write.php');
+		Route::any('/blog/{blog_username}/{id}/delete', '/subdomain/blog/blog_delete.php');
+
+		//dhxh begin
+		Route::any('/blog/{blog_username}/blog/imgupload', '/subdomain/blog/blog_img_upload.php');
+		//dhxh end
 	}
 );
 

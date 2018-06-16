@@ -38,9 +38,9 @@
 		<meta name="robots" content="noindex, nofollow" />
 		<?php endif ?>
 		<!---
-		<title><?= isset($PageTitle) ? $PageTitle : 'BNDSOJ for Homework' ?> - <?= $PageMainTitle ?></title>
+		<title><?= isset($PageTitle) ? $PageTitle : 'BNDSOJ' ?> - <?= $PageMainTitle ?></title>
 		--->
-		<title><?= isset($PageTitle) ? 'BNDSOJ for Homework' : 'BNDSOJ for Homework' ?> - <?= $PageMainTitle ?></title>
+		<title><?= isset($PageTitle) ? 'BNDSOJ' : 'BNDSOJ' ?> - <?= $PageMainTitle ?></title>
 		<script type="text/javascript">uojHome = '<?= HTML::url('/') ?>'</script>
 
 		<!-- Bootstrap core CSS -->
@@ -259,8 +259,8 @@
 					<li role="presentation"><a href="<?= HTML::url('/register') ?>"><?= UOJLocale::get('register') ?></a></li>
 				<?php endif ?>
 				</ul>
-				<h1 class="hidden-xs"><a href="<?= HTML::url('/') ?>"><img src="<?= HTML::url('/pictures/BNDSOJ-small.png') ?>" alt="UOJ Logo" class="img-rounded" style="width:39px; height:39px;" /></a> <?= $PageMainTitle ?> <small>for Homework</small></h1>
-				<h1 class="visible-xs"><?= $PageMainTitleOnSmall ?><small>for Homework</small></h1>
+				<h1 class="hidden-xs"><a href="<?= HTML::url('/') ?>"><img src="<?= HTML::url('/pictures/BNDSOJ-small.png') ?>" alt="UOJ Logo" class="img-rounded" style="width:39px; height:39px;" /></a> <?= $PageMainTitle ?></h1>
+				<h1 class="visible-xs"><?= $PageMainTitleOnSmall ?></h1>
 			</div>
 			
 			<?php uojIncludeView($PageNav) ?>
