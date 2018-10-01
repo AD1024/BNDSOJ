@@ -34,7 +34,26 @@ EOD;
 		} elseif ($contest['cur_progress'] == CONTEST_TESTING) {
 			$contest_name_link .= '<sup><a style="color:blue" href="/contest/'.$contest['id'].'">'.UOJLocale::get('contests::final testing').'</a></sup>';
 		} elseif ($contest['cur_progress'] == CONTEST_FINISHED) {
-			$contest_name_link .= '<sup><a style="color:grey" href="/contest/'.$contest['id'].'/standings">'.UOJLocale::get('contests::ended').'</a></sup>';
+			// Skqliao begin
+			$mysql = mysql_query("select * from contests_registrants where contest_id = ".$contest['id']." and rank=1");
+			$res = mysql_fetch_array($mysql);
+			$mysql2 = mysql_query("select * from user_info where username = '".$res['username']."'");
+			$res2 = mysql_fetch_array($mysql2);
+			if($contest['id'] <= 66) {
+				if($contest['id'] == 55 || $contest['id'] == 57 || $contest['id'] == 59 || $contest['id'] == 60 || $contest['id'] == 64 || $contest['id'] == 66) {
+					$title.='<sup><a style="color:green">rated</a></sup>';
+				} else{
+					$title.='<sup><a style="color:red">unrated</a></sup>';
+				}
+			} else {
+				if($res2['contest_rating'] != $res['user_rating']) {
+					$title.='<sup><a style="color:green">rated</a></sup>';
+				} else {
+					$title.='<sup><a style="color:red">unrated</a></sup>';
+				}
+			}
+			$contest_name_link .= '<sup><a style="color:grey" href="/contest/'.$contest['id'].'/standings">'.UOJLocale::get('contests::ended').$title.'</a></sup>';
+			// Skqliao end
 		}
 		
 		$last_hour = round($contest['last_min'] / 60, 2);

@@ -26,7 +26,7 @@
 			break;
 		}
 	}
-	
+	$fp = fopen("/var/www/uoj/app/controllers/homework/result".$homework_id, "w");
 	$cnt = 0;
 	
 ?>
@@ -37,6 +37,7 @@
 	<thead>
 		<tr>
 			<th>用户名</th>
+			<th>AC数</th>
 			<?php
 				foreach($problems as $x){
 					if(!validateUInt($x)){
@@ -56,40 +57,37 @@
 			$sql = mysql_query("select * from user_homework where homework_id = ".$homework_id." order by owner asc;");
 			while($info = mysql_fetch_array($sql)){
 		?>
-
+		<?php
+			$cnt = 0;
+			$arr = array();
+			foreach($problems as $x){
+				if(!validateUInt($x)){
+					continue;
+				}
+				$sqlb = mysql_query("select * from best_ac_submissions where problem_id = ".$x." and submitter = '".$info['owner']."';");
+				$infob = mysql_fetch_array($sqlb);
+				if (!empty($infob)) {
+					$cnt = $cnt + 1;
+				}
+			}
+		?>
 		<tr>
 			<td><?php echo getUserLink($info['owner']); ?></td>
+			<td><?php echo $cnt; ?></td>
 		<?php
 				foreach($problems as $x){
-					if(!validateUInt($x)){
-						continue;
-					}
-					$sqlb = mysql_query("select * from submissions where problem_id = ".$x." and submitter = '".$info['owner']."' order by score desc, submit_time desc;");
+					echo "<td>";
+					$sqlb = mysql_query("select * from best_ac_submissions where problem_id = ".$x." and submitter = '".$info['owner']."';");
 					$infob = mysql_fetch_array($sqlb);
-					/*if ($infob['score'] == '100') {
-						echo '<td style="background-color:#38b44a">';
-					} else {
-						echo '<td>';
-					}*/
-					
-					echo '<td>';
-					
-					if(!$infob['score']){
-						$infob['score'] = 0;
+					if (!empty($infob)) {
+						echo '<a href="/submission/', $infob['submission_id'], '" target="_blank" class="uoj-score">'."100".'</a>';
 					}
-					
-					echo '<a href="/submission/', $infob['id'], '" target="_blank" class="uoj-score">'.$infob['score'].'</a>';
-					
-					
 					echo "</td>";
 				}
 		?>
-			
 		</tr>
-
 		<?php
 			}
 		?>
-
 	</tbody>
 </table>

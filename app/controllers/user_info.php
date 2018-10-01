@@ -39,11 +39,11 @@
 					<img class="media-object img-thumbnail center-block" alt="<?= $user['username'] ?> Avatar" src="<?= HTML::avatar_addr($user, 256) ?>" />
 				</div>
 				<div class="col-md-8 col-md-pull-4">
-					<h2><span class="uoj-honor" data-rating="<?= $user['rating'] ?>"><?= $user['username'].$esc_realname ?></span> <span><strong style="<?= $col_sex ?>"><?= $esc_sex ?></strong></span></h2>
+					<h2><span class="uoj-honor" data-rating="<?= $user['contest_rating'] ?>"><?= $user['username'].$esc_realname ?></span> <span><strong style="<?= $col_sex ?>"><?= $esc_sex ?></strong></span></h2>
 					<div class="list-group">
 						<div class="list-group-item">
 							<h4 class="list-group-item-heading"><?= UOJLocale::get('rating') ?></h4>
-							<p class="list-group-item-text"><strong style="color:red"><?= $user['rating'] ?></strong></p>
+							<p class="list-group-item-text"><strong style="color:red"><?= $user['contest_rating'] ?></strong></p>
 						</div>
 						<div class="list-group-item">
 							<h4 class="list-group-item-heading"><?= UOJLocale::get('email') ?></h4>
@@ -57,11 +57,27 @@
 							<h4 class="list-group-item-heading"><?= UOJLocale::get('motto') ?></h4>
 							<p class="list-group-item-text"><?= $esc_motto ?></p>
 						</div>
-						<?php if (isSuperUser($myUser)): ?>
 						<div class="list-group-item">
 							<h4 class="list-group-item-heading">register time</h4>
 							<p class="list-group-item-text"><?= $user['register_time'] ?></p>
 						</div>
+						<div class="list-group-item">
+							<h4 class="list-group-item-heading">user group</h4>
+							<?php
+								$user_group = $user['usergroup'];
+								if($user_group == "S") {
+									$group = "超级管理员";
+								} else if($user_group == "U") {
+									$group = "普通用户";
+								} else if($user_group == "B") {
+									$group = "封禁用户";
+								} else {
+									$group = "难道是外星人？";
+								}
+							?>
+							<p class="list-group-item-text"><?= $group ?></p>
+						</div>
+						<?php if (isSuperUser($myUser)): ?>
 						<div class="list-group-item">
 							<h4 class="list-group-item-heading">remote_addr</h4>
 							<p class="list-group-item-text"><?= $user['remote_addr'] ?></p>
@@ -148,16 +164,16 @@ var rating_data = [[
 	}
 	if ($is_first_row) {
 		$time_now_stamp = (UOJTime::$time_now->getTimestamp() + UOJTime::$time_now->getOffset()) * 1000;
-		echo "[{$time_now_stamp}, {$user['rating']}, 0]";
+		echo "[{$time_now_stamp}, {$user['contest_rating']}, 0]";
 	} else {
-		$rating_delta = $user['rating'] - $last_rating;
-		echo "[$last_contest_time, {$user['rating']}, $last_contest_id, '$last_contest_name', $last_rank, $rating_delta]";
+		$rating_delta = $user['contest_rating'] - $last_rating;
+		echo "[$last_contest_time, {$user['contest_rating']}, $last_contest_id, '$last_contest_name', $last_rank, $rating_delta]";
 	}
-	if ($user['rating'] < $user_rating_min) {
-		$user_rating_min = $user['rating'];
+	if ($user['contest_rating'] < $user_rating_min) {
+		$user_rating_min = $user['contest_rating'];
 	}
-	if ($user['rating'] > $user_rating_max) {
-		$user_rating_max = $user['rating'];
+	if ($user['contest_rating'] > $user_rating_max) {
+		$user_rating_max = $user['contest_rating'];
 	}
 		
 	$user_rating_min -= 400;
@@ -186,7 +202,7 @@ var rating_plot = $.plot($("#rating-plot"), [{
 	},
 	legend: {
 		labelFormatter: function(username) {
-			return getUserLink(username, <?= $user['rating'] ?>, false);
+			return getUserLink(username, <?= $user['contest_rating'] ?>, false);
 		}
 	},
 	grid: {

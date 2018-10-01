@@ -44,6 +44,9 @@
 	
 	if (isset($_GET['tab'])) {
 		$cur_tab = $_GET['tab'];
+		if($_GET['tab'] == "rated") {
+			$cur_tab = 'dashboard';
+		}
 	} else {
 		$cur_tab = 'dashboard';
 	}
@@ -267,6 +270,12 @@
 		if ($contest['cur_progress'] >= CONTEST_TESTING) {
 			$publish_result_form = new UOJForm('publish_result');
 			$publish_result_form->handle = function() {
+				// Skqliao begin
+				$rated = 0;
+				if (isset($_GET['tab']) && $_GET['tab'] == 'rated') {
+					$rated = 1;
+				}
+				// Skqliao end
 				// time config
 				set_time_limit(0);
 				ignore_user_abort(true);
@@ -307,10 +316,14 @@ EOD;
 EOD;
 					}
 					sendSystemMsg($user['username'], 'Rating变化通知', $content);
-					//dhxh begin
-					//mysql_query("update user_info set rating = {$ratings[$i]} where username = '{$standings[$i][2][0]}'");
+					// Skqliao begin
+					if($rated == 1) {
+						mysql_query("update user_info set contest_rating = {$ratings[$i]} where username = '{$user['username']}'");
+					}
 					//mysql_query("update contests_registrants set rank = {$standings[$i][3]} where contest_id = {$contest['id']} and username = '{$standings[$i][2][0]}'");
-					mysql_query("update user_info set rating = {$ratings[$i]} where username = '{$user['username']}'");
+					//mysql_query("update user_info set rating = {$ratings[$i]} where username = '{$user['username']}'");
+					//Skqliao end
+					//dhxh begin
 					mysql_query("update contests_registrants set rank = {$standings[$i][3]} where contest_id = {$contest['id']} and username = '{$user['username']}'");
 					//dhxh end
 				}
@@ -520,7 +533,27 @@ EOD;
 	}
 	
 	function echoContestFinished() {
+		global $contest;
+		// Skqliao begin
 		$title = UOJLocale::get('contests::contest ended');
+		$mysql = mysql_query("select * from contests_registrants where contest_id = ".$contest['id']." and rank=1");
+		$res = mysql_fetch_array($mysql);
+		$mysql2 = mysql_query("select * from user_info where username = '".$res['username']."'");
+		$res2 = mysql_fetch_array($mysql2);
+		if($contest['id'] <= 66) {
+			if($contest['id'] == 55 || $contest['id'] == 57 || $contest['id'] == 59 || $contest['id'] == 60 || $contest['id'] == 64 || $contest['id'] == 66) {
+				$title.=" <font color=\"green\">rated</font>";
+			} else{
+				$title.=" <font color=\"red\">unrated</font>";
+			}
+		} else {
+			if($res2['contest_rating'] != $res['user_rating']) {
+				$title.=" <font color=\"green\">rated</font>";
+			} else {
+				$title.=" <font color=\"red\">unrated</font>";
+			}
+		}
+		// Skqliao end
 		echo <<<EOD
  		<div class="panel panel-info">
  			<div class="panel-heading">

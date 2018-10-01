@@ -517,7 +517,9 @@ EOD;
 			}
 			
 			if (isset($this->submit_button_config['smart_confirm'])) {
-				$this->submit_button_config['confirm_text'] = '你真的要' . $this->submit_button_config['text'] . '吗？';
+				if($this->submit_button_config['text'] != "添加新题") {
+					$this->submit_button_config['confirm_text'] = '你真的要' . $this->submit_button_config['text'] . '吗？';
+				}		
 			}
 			if (isset($this->submit_button_config['confirm_text'])) {
 				echo <<<EOD

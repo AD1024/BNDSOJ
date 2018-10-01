@@ -2,11 +2,10 @@
 	requirePHPLib('form');
 	requirePHPLib('judger');
 	requirePHPLib('svn');
-
 	if ($myUser == null) {
 		redirectToLogin();
 	}
-	
+
 	if (isSuperUser($myUser)) {
 		$new_problem_form = new UOJForm('new_problem');
 		global $ran_id;
@@ -81,7 +80,8 @@ EOD;
 	$cond = array();
 	
 	$search_tag = null;
-	
+	$search_name = null;
+
 	$cur_tab = isset($_GET['tab']) ? $_GET['tab'] : 'all';
 	
 	// AD1024 Begin
@@ -101,17 +101,34 @@ EOD;
 		$cur_tab = 'enhance';
 	}
 	// AD1024 End
-
-	if (isset($_GET['tag'])) {
-		$search_tag = $_GET['tag'];
-		//dhxh begin
-		$search_tag = str_replace("'","",$search_tag);
-		$search_tag = str_replace("\\","",$search_tag);
-		$search_tag = str_replace("%27","",$search_tag);
-		//dhxh end
-	}
-	if ($search_tag) {
-		$cond[] = "'".DB::escape($search_tag)."' in (select tag from problems_tags where problems_tags.problem_id = problems.id)";
+	// Skqliao begin
+	if(isset($_GET['search'])) {
+		$search_name = $_GET['search'];
+		$search_name = str_replace("'","",$search_name);
+		$search_name = str_replace("\\","",$search_name);
+		$search_name = str_replace("%27","",$search_name);
+		if($search_name) {
+			if(validateUInt($_GET['search']) && queryProblemBrief($_GET['search'])) {
+				$url= "/problem/".$_GET['search']; 
+				Header("HTTP/1.1 303 See Other"); 
+				Header("Location: $url"); 
+				exit;
+			} else {
+				$cond[] = "problems.title Like'%".DB::escape($search_name)."%'";
+			}
+		} // Skqliao end
+	} else {
+		if (isset($_GET['tag'])) {
+			$search_tag = $_GET['tag'];
+			//dhxh begin
+			$search_tag = str_replace("'","",$search_tag);
+			$search_tag = str_replace("\\","",$search_tag);
+			$search_tag = str_replace("%27","",$search_tag);
+			//dhxh end
+		}
+		if ($search_tag) {
+			$cond[] = "'".DB::escape($search_tag)."' in (select tag from problems_tags where problems_tags.problem_id = problems.id)";
+		}
 	}
 	
 	if ($cond) {
@@ -196,23 +213,90 @@ EOD;
 	$table_classes = array('table', 'table-bordered', 'table-hover', 'table-striped');
 ?>
 <?php echoUOJPageHeader(UOJLocale::get('problems')) ?>
+
+<?php // Skqliao begin ?>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">标签云</h4>
+            </div>
+            <div class="modal-body">
+		    	<div class="row">
+					<form class="form-inline text-center"><input type="text" name="tag" class="form-control" /><button class="btn btn-primary" type="submit">搜索</button></form>
+				</div>
+				<?php 
+				$sql = mysql_query("SELECT DISTINCT tag FROM problems_tags ORDER BY tag ASC");
+				$cur = 0;
+				?>
+				<div style="text-align:center">
+				<h2>标签一览表</h2>
+				<table width="95%" border="2" align="center">
+				<tr>
+					<th>名称</th><th>题目数量</th><th>跳转</th>
+					<th>名称</th><th>题目数量</th><th>跳转</th>
+				</tr>
+				<tr>
+				<?php
+				while($tag = mysql_fetch_array($sql)) {
+					$count = DB::selectCount("select count(*) from problems_tags WHERE tag = '".$tag['tag']."'");
+					if($cur % 2 == 0) {
+						echo '<tr>';
+					} ?>
+					<td><?=$tag['tag']?></td><td><?=$count?></td><td><a href="/problems?tag=<?=$tag['tag']?>">GO</a></td>
+				<?php
+					if($cur % 2 == 1) {
+						echo '</tr>';
+					}
+					$cur = $cur + 1;
+				}
+				?>
+				</tr>
+				</table>
+			</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<div class="row">
+	<div class="col-sm-4">
+		<?php // Skqliao begin ?>
+		<button class="btn btn-primary" data-toggle="modal" data-target="#myModal">选择标签</button>
+		<?php // Skqliao end ?>
+	</div>
+	<div class="col-sm-4 text-center">
+	<?php echo $pag->pagination(); ?>
+	</div>
+	<div class="col-sm-4 checkbox text-right">
+		<label class="checkbox-inline" for="input-show_tags_mode"><input type="checkbox" id="input-show_tags_mode" <?= isset($_COOKIE['show_tags_mode']) ? 'checked="checked" ': ''?>/> <?= UOJLocale::get('problems::show tags') ?></label>
+		<label class="checkbox-inline" for="input-show_submit_mode"><input type="checkbox" id="input-show_submit_mode" <?= isset($_COOKIE['show_submit_mode']) ? 'checked="checked" ': ''?>/> <?= UOJLocale::get('problems::show statistics') ?></label>
+	</div>
+</div>
+
 <div class="row">
 	<div class="col-sm-4">
 		<?= HTML::tablist($tabs_info, $cur_tab, 'nav-pills') ?>
 	</div>
-	<div class="col-sm-4 col-sm-push-4 checkbox text-right">
-		<label class="checkbox-inline" for="input-show_tags_mode"><input type="checkbox" id="input-show_tags_mode" <?= isset($_COOKIE['show_tags_mode']) ? 'checked="checked" ': ''?>/> <?= UOJLocale::get('problems::show tags') ?></label>
-		<label class="checkbox-inline" for="input-show_submit_mode"><input type="checkbox" id="input-show_submit_mode" <?= isset($_COOKIE['show_submit_mode']) ? 'checked="checked" ': ''?>/> <?= UOJLocale::get('problems::show statistics') ?></label>
+	<div class="col-sm-4">
+        <form class="form-inline text-center"><input type="text" name="search" class="form-control" /><button class="btn btn-primary" type="submit">搜索</button></form>
 	</div>
-	<div class="col-sm-4 col-sm-pull-4">
-	<?php echo $pag->pagination(); ?>
-	</div>
-</div>
-<div class="row">
-	<div class="col-sm-12">
-		<?= HTML::tablist($level_tab_info, $level_cur_tab, 'nav-pills') ?>
+	<div class="col-sm-4">
+	<?php
+		if (isSuperUser($myUser)) {
+			$new_problem_form->printHTML();
+		}
+	?>
 	</div>
 </div>
+
+<?php // Skqliao end ?>
+
 <div class="top-buffer-sm"></div>
 <script type="text/javascript">
 $('#input-show_tags_mode').click(function() {
@@ -239,7 +323,7 @@ $('#input-show_submit_mode').click(function() {
 	echo $header;
 	echo '</thead>';
 	echo '<tbody>';
-	
+
 	foreach ($pag->get() as $idx => $row) {
 		echoProblem($row);
 	}
@@ -251,7 +335,7 @@ $('#input-show_submit_mode').click(function() {
 	if (isSuperUser($myUser)) {
 		$new_problem_form->printHTML();
 	}
-	
+
 	echo $pag->pagination();
 ?>
 <?php echoUOJPageFooter() ?>

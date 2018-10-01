@@ -69,6 +69,39 @@
 <?php $problem_editor->printHTML() ?>
 
 <?php //dhxh begin ?>
+<br>
+<div class="row">
+	<div class="col-sm-4">
+		<?php
+			if(queryProblemBrief($problem['id'] - 1)){
+		?>
+		<a href="<?= '/problem/'.($problem['id'] - 1).'/manage/statement' ?>" type="button" class="btn btn-primary btn-block">上一题</a>
+		<?php
+			}else{
+		?>
+		<button type="button" class="btn btn-primary btn-block" disabled="disabled">上一题</button>
+		<?php
+			}
+		?>
+	</div>
+	<div class="col-sm-4"></div>
+	<div class="col-sm-4">
+		<?php
+			if(queryProblemBrief($problem['id'] + 1)){
+		?>
+		<a href="<?= '/problem/'.($problem['id'] + 1).'/manage/statement' ?>" type="button" class="btn btn-primary btn-block">下一题</a>
+		<?php
+			}else{
+		?>
+		<button type="button" class="btn btn-primary btn-block" disabled="disabled">下一题</button>
+		<?php
+			}
+		?>
+	</div>
+</div>
+<?php //dhxh end ?>
+
+<?php //dhxh begin ?>
 
 <div class="modal fade" id="UploadImgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   	<div class="modal-dialog">

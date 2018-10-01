@@ -789,7 +789,7 @@ EOD
 	</div>
 
 	<div class="modal fade" id="ProblemSettingsFileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  		<div class="modal-dialog">
+  		<div class="modal-dialog modal-lg">
     			<div class="modal-content">
       				<div class="modal-header">
         				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -797,94 +797,100 @@ EOD
       				</div>
       				<div class="modal-body">
         				<form class="form-horizontal" action="" method="post" role="form">
-        					<div class="form-group">
-    							<label for="use_builtin_checker" class="col-sm-5 control-label">比对函数  </label>
-    							<div class="col-sm-7">
-									<!-- <div class="form-group" id="radio-group" name="radio-group"> -->
-										<label class="radio">
-											<input type="radio" class="toggle" value="ncmp" name="use_builtin_checker" checked="checked"> 整数序列
-										</label>
-										<label class="radio">
-											<input type="radio" class="toggle" name="use_builtin_checker" value="wcmp"> 字符串序列
-										</label>
-										<label class="radio">
-											<input type="radio" class="toggle" name="use_builtin_checker" value="fcmp"> 全文对比(仅忽略最后一行空行)
-										</label>
-										<label class="radio">
-											<input type="radio" class="toggle" name="use_builtin_checker" value="other"> 其他
-											<select class="form-control" id="other_checker_methods" name="other_checker_methods">
-												<option value="yesno">比较单个YES或NO</option>
-												<option value="icmp">单个整数</option>
-												<option value="uncmp">(单行整数序列)比较无序64位整数序列，即排序后比较</option>
-												<option value="acmp">单个双精度浮点数 最大绝对误差为1.5e-6</option>
-												<option value="dcmp">单个双精度浮点数 最大绝对或相对误差为1.0e-6</option>
-												<option value="rcmp4">双精度浮点数序列 最大绝对或相对误差为1.0e-4</option>
-												<option value="rcmp6">双精度浮点数序列 最大绝对或相对误差为1.0e-6</option>
-												<option value="rncmp">双精度浮点数序列 最大绝对误差为1.5e-5</option>
-												<option value="hcmp">单个有符号大整数</option>
-												<option value="lcmp">逐行逐字符串进行全文比较 多个空白字符视为一个</option>
-												<option value="caseicmp">比较形如：Case [caseNumber]: [number]</option>
-												<option value="casencmp">比较形如：Case [caseNumber]: [number] [number]...[number]</option>
-												<option value="casewcmp">比较形如：Case [caseNumber]: [token] [token]...[token]</option>
-											</select>
-										</label>
-									<!-- </div> -->
-      								<!--<input type="hidden" class="form-control" id="use_builtin_checker" name="use_builtin_checker" placeholder="比对函数">-->
-    							</div>
-  							</div>
-  							<div class="form-group">
-    							<label for="n_tests" class="col-sm-5 control-label">测试点个数</label>
-    							<div class="col-sm-7">
-      								<input type="text" class="form-control" id="n_tests" name="n_tests" placeholder="默认为10">
-    							</div>
-  							</div>
-  							<div class="form-group">
-    							<label for="n_ex_tests" class="col-sm-5 control-label">额外测试点数</label>
-    							<div class="col-sm-7">
-      								<input type="text" class="form-control" id="n_ex_tests" name="n_ex_tests" placeholder="可留空">
-    							</div>
-  							</div>
-  							<div class="form-group">
-    							<label for="n_sample_tests" class="col-sm-5 control-label">样例测试点数</label>
-    							<div class="col-sm-7">
-      								<input type="text" class="form-control" id="n_sample_tests" name="n_sample_tests" placeholder="可留空">
-    							</div>
-  							</div>
-  							<div class="form-group">
-    							<label for="input_pre" class="col-sm-5 control-label">输入文件名</label>
-    							<div class="col-sm-7">
-      								<input type="text" class="form-control" id="input_pre" name="input_pre" placeholder="默认为data">
-    							</div>
-  							</div>
-  							<div class="form-group">
-    							<label for="input_suf" class="col-sm-5 control-label">输入文件名后缀</label>
-    							<div class="col-sm-7">
-      								<input type="text" class="form-control" id="input_suf" name="input_suf" placeholder="默认为 .in" value="in">
-    							</div>
-  							</div>
-  							<div class="form-group">
-    							<label for="output_pre" class="col-sm-5 control-label">输出文件名</label>
-    							<div class="col-sm-7">
-      								<input type="text" class="form-control" id="output_pre" name="output_pre" placeholder="默认与输入文件名相同">
-    							</div>
-  							</div>
-  							<div class="form-group">
-    							<label for="output_suf" class="col-sm-5 control-label">输出文件名后缀</label>
-    							<div class="col-sm-7">
-      								<input type="text" class="form-control" id="output_suf" name="output_suf" placeholder="默认为out" value="out">
-    							</div>
-  							</div>
-  							<div class="form-group">
-    							<label for="time_limit" class="col-sm-5 control-label">时间限制</label>
-    							<div class="col-sm-7">
-      								<input type="text" class="form-control" id="time_limit" name="time_limit" placeholder="不能为小数！默认为1">
-    							</div>
-  							</div>
-  							<div class="form-group">
-    							<label for="memory_limit" class="col-sm-5 control-label">内存限制</label>
-    							<div class="col-sm-7">
-      								<input type="text" class="form-control" id="memory_limit" name="memory_limit" placeholder="默认为128">
-    							</div>
+        					<div class="row">
+        						<div class="col-sm-6">
+        							<div class="form-group">
+    									<label for="use_builtin_checker" class="col-sm-5 control-label">比对函数  </label>
+    									<div class="col-sm-7">
+											<!-- <div class="form-group" id="radio-group" name="radio-group"> -->
+											<label class="radio">
+												<input type="radio" class="toggle" value="ncmp" name="use_builtin_checker" checked="checked"> 整数序列
+											</label>
+											<label class="radio">
+												<input type="radio" class="toggle" name="use_builtin_checker" value="wcmp"> 字符串序列
+											</label>
+											<label class="radio">
+												<input type="radio" class="toggle" name="use_builtin_checker" value="fcmp"> 全文对比(仅忽略最后一行空行)
+											</label>
+											<label class="radio">
+												<input type="radio" class="toggle" name="use_builtin_checker" value="other"> 其他
+												<select class="form-control" id="other_checker_methods" name="other_checker_methods">
+													<option value="yesno">比较单个YES或NO</option>
+													<option value="icmp">单个整数</option>
+													<option value="uncmp">(单行整数序列)比较无序64位整数序列，即排序后比较</option>
+													<option value="acmp">单个双精度浮点数 最大绝对误差为1.5e-6</option>
+													<option value="dcmp">单个双精度浮点数 最大绝对或相对误差为1.0e-6</option>
+													<option value="rcmp4">双精度浮点数序列 最大绝对或相对误差为1.0e-4</option>
+													<option value="rcmp6">双精度浮点数序列 最大绝对或相对误差为1.0e-6</option>
+													<option value="rncmp">双精度浮点数序列 最大绝对误差为1.5e-5</option>
+													<option value="hcmp">单个有符号大整数</option>
+													<option value="lcmp">逐行逐字符串进行全文比较 多个空白字符视为一个</option>
+													<option value="caseicmp">比较形如：Case [caseNumber]: [number]</option>
+													<option value="casencmp">比较形如：Case [caseNumber]: [number] [number]...[number]</option>
+													<option value="casewcmp">比较形如：Case [caseNumber]: [token] [token]...[token]</option>
+												</select>
+											</label>
+										<!-- </div> -->
+      									<!--<input type="hidden" class="form-control" id="use_builtin_checker" name="use_builtin_checker" placeholder="比对函数">-->
+    									</div>
+  									</div>
+  									<div class="form-group">
+    									<label for="n_tests" class="col-sm-5 control-label">测试点个数</label>
+    									<div class="col-sm-7">
+      										<input type="text" class="form-control" id="n_tests" name="n_tests" placeholder="默认为10">
+    									</div>
+  									</div>
+  									<div class="form-group">
+    									<label for="n_ex_tests" class="col-sm-5 control-label">额外测试点数</label>
+    									<div class="col-sm-7">
+      										<input type="text" class="form-control" id="n_ex_tests" name="n_ex_tests" placeholder="可留空">
+    									</div>
+  									</div>
+  									<div class="form-group">
+    									<label for="n_sample_tests" class="col-sm-5 control-label">样例测试点数</label>
+    									<div class="col-sm-7">
+      										<input type="text" class="form-control" id="n_sample_tests" name="n_sample_tests" placeholder="可留空">
+    									</div>
+  									</div>
+  								</div>
+  								<div class="col-sm-6">
+  									<div class="form-group">
+    									<label for="input_pre" class="col-sm-5 control-label">输入文件名</label>
+    									<div class="col-sm-7">
+      										<input type="text" class="form-control" id="input_pre" name="input_pre" placeholder="默认为data">
+    									</div>
+  									</div>
+  									<div class="form-group">
+    									<label for="input_suf" class="col-sm-5 control-label">输入文件名后缀</label>
+    									<div class="col-sm-7">
+      										<input type="text" class="form-control" id="input_suf" name="input_suf" placeholder="默认为 .in" value="in">
+    									</div>
+  									</div>
+  									<div class="form-group">
+    									<label for="output_pre" class="col-sm-5 control-label">输出文件名</label>
+    									<div class="col-sm-7">
+      										<input type="text" class="form-control" id="output_pre" name="output_pre" placeholder="默认与输入文件名相同">
+    									</div>
+  									</div>
+  									<div class="form-group">
+    									<label for="output_suf" class="col-sm-5 control-label">输出文件名后缀</label>
+    									<div class="col-sm-7">
+      										<input type="text" class="form-control" id="output_suf" name="output_suf" placeholder="默认为out" value="out">
+    									</div>
+  									</div>
+  									<div class="form-group">
+    									<label for="time_limit" class="col-sm-5 control-label">时间限制</label>
+    									<div class="col-sm-7">
+      										<input type="text" class="form-control" id="time_limit" name="time_limit" placeholder="不能为小数！默认为1">
+    									</div>
+  									</div>
+  									<div class="form-group">
+    									<label for="memory_limit" class="col-sm-5 control-label">内存限制</label>
+    									<div class="col-sm-7">
+      										<input type="text" class="form-control" id="memory_limit" name="memory_limit" placeholder="默认为128">
+    									</div>
+  									</div>
+  								</div>
   							</div>
 							<input type="hidden" name="problem_settings_file_submit" value="submit">
   							<div align="center"><button type="submit" class="btn btn-success">确定</button></div>

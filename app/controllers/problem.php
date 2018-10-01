@@ -234,6 +234,37 @@ EOD
 	<?= getClickZanBlock('P', $problem['id'], $problem['zan']) ?>
 </div>
 
+<?php
+	$file = "/var/svn/problem/{$problem['id']}/cur/{$problem['id']}/1/problem.conf";
+	$time = "";
+	$memory = "";
+	$tests = "";
+	$manager = "teacherone";
+	if(file_exists($file)) {
+		$fp = fopen($file, "r");
+		while(!feof($fp)) {
+			$str = fgets($fp);
+			if(strstr($str, "time_limit")) {
+				if(preg_match('/([0-9]{1,5})/', $str, $arr)) {
+					$time = $arr[1];
+				}
+			} else if(strstr($str, "memory_limit")) {
+				if(preg_match('/([0-9]{1,5})/', $str, $arr)) {
+					$memory = $arr[1];
+				}
+			} else if(strstr($str, "n_tests")) {
+				if(preg_match('/([0-9]{1,5})/', $str, $arr)) {
+					$tests = $arr[1];
+				}
+			}
+		}
+	}
+	$result = mysql_query("select username from problems_permissions where problem_id = ${problem['id']}");
+	if ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+		$manager = $row['username'];
+	}
+?>
+
 <?php if ($contest): ?>
 <div class="page-header row">
 	<h1 class="col-md-3 text-left"><small><?= $contest['name'] ?></small></h1>
@@ -241,14 +272,41 @@ EOD
 	<div class="col-md-2 text-right" id="contest-countdown"></div>
 </div>
 <a role="button" class="btn btn-info pull-right" href="/contest/<?= $contest['id'] ?>/problem/<?= $problem['id'] ?>/statistics"><span class="glyphicon glyphicon-stats"></span> <?= UOJLocale::get('problems::statistics') ?></a>
+<?php // skqliao begin ?>
+<h4>
+<p class="text-center">
+			<a href="#" class="tooltip-test" data-toggle="tooltip" title="依次为时间限制、空间限制和数据点个数">本题配置：</a>
+			<span class="label label-primary"><?= $time ?> Sec</span>
+			<span class="label label-info"><?= $memory ?> Mb</span>
+			<span class="label label-warning"><?= $tests ?> Test</span>
+		</p>
+</h4>
+<?php // skqliao end ?>
 <?php if ($contest['cur_progress'] <= CONTEST_IN_PROGRESS): ?>
 <script type="text/javascript">
 checkContestNotice(<?= $contest['id'] ?>, '<?= UOJTime::$time_now_str ?>');
 $('#contest-countdown').countdown(<?= $contest['end_time']->getTimestamp() - UOJTime::$time_now->getTimestamp() ?>);
-</script>
+</script>	
+
 <?php endif ?>
 <?php else: ?>
 <h1 class="page-header text-center">#<?= $problem['id']?>. <?= $problem['title'] ?></h1>
+
+<?php // skqliao begin ?>
+<h4>
+		<p class="text-left">
+			<a href="#" class="tooltip-test" data-toggle="tooltip" title="依次为时间限制、空间限制和数据点个数">本题配置：</a>
+			<span class="label label-primary"><?= $time ?> Sec</span>
+			<span class="label label-info"><?= $memory ?> Mb</span>
+			<span class="label label-warning"><?= $tests ?> Test</span>
+		</p>
+		<p class="text-left">
+			<a href="#" class="tooltip-test" data-toggle="tooltip" title="有问题请私信管理员">本题管理员：</a>
+			<?= getUserLink($manager) ?>
+		</p>
+		</h4>
+<?php // skqliao end ?>
+
 <a role="button" class="btn btn-info pull-right" href="/problem/<?= $problem['id'] ?>/statistics"><span class="glyphicon glyphicon-stats"></span> <?= UOJLocale::get('problems::statistics') ?></a>
 <?php endif ?>
 

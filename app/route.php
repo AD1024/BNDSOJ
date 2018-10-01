@@ -42,6 +42,13 @@ Route::group([
 		// AD1024 end
 		*/
 
+		//Skqliao begin
+		Route::any('/index_contest', '/index.php?tab=contest');
+		Route::any('/index_problem', '/index.php?tab=problem');
+		Route::any('/contest/{id}/rated', '/contest_inside.php?tab=rated');
+		Route::any('/contest_ranklist', '/contest_ranklist.php?type=rating');
+		//Skqliao end
+
 		//dhxh begin
 		Route::any('/problems/basic', '/problem_set.php?tab=basic');
 		Route::any('/problems/harder', '/problem_set.php?tab=harder');
@@ -157,7 +164,7 @@ Route::group([
 		Route::any('/blog/{blog_username}/slide/{id}', '/subdomain/blog/slide.php');
 		Route::any('/blog/{blog_username}/blog/(?:{id}|new)/write', '/subdomain/blog/blog_write.php');
 		Route::any('/blog/{blog_username}/slide/(?:{id}|new)/write', '/subdomain/blog/slide_write.php');
-		Route::any('/blog/{blog_username}/{id}/delete', '/subdomain/blog/blog_delete.php');
+		Route::any('/blog/{blog_username}/blog/{id}/delete', '/subdomain/blog/blog_delete.php');
 
 		//dhxh begin
 		Route::any('/blog/{blog_username}/blog/imgupload', '/subdomain/blog/blog_img_upload.php');
